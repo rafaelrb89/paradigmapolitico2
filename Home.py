@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 import streamlit as st
+import time
 
 st.set_page_config(
     page_title="Paradigma Politico",
@@ -16,7 +17,6 @@ st.markdown("""
     Ola!
     Construimos este site com o intuito de te ajudar a perceber o teu alinhmento politico.
     Far-te-emos varias perguntas, tentando perceber com qual partido e que a tua opiniao se enquadra.
-    Havendo alguma inconsistencia, por favor entra em [contacto por email](mailto:miguelptcosta1995@gmail.com).
 """)
 
 political_parties = {
@@ -43,33 +43,36 @@ if 'answers' not in st.session_state:
 
 party_answers = pd.read_csv("paradigma_politico.csv")
 party_answers.set_index("Pergunta", inplace=True)
-if 'question' not in st.session_state or st.session_state.question in st.session_state.answers.keys():
-    # Take a random question
-    st.session_state.question = random.choice([
-        q for q in party_answers.index
-        if q not in st.session_state.answers.keys()
-    ])
+
+# Take a random question
+question = random.choice([
+    q for q in party_answers.index
+    if q not in st.session_state.answers.keys()
+])
+
+if 'previous_question' not in st.session_state:
+    st.session_state.previous_question = question
 
 st.header("As tuas escolhas", divider="orange")
 
-st.markdown(st.session_state.question)
+st.markdown(question)
 
 c1, c2, c3, c4, c5 = st.columns(5)
 with c1:
     if st.button("Discordo totalmente"):
-        st.session_state.answers[st.session_state.question] = -2
+        st.session_state.answers[st.session_state.previous_question] = -2
 with c2:
     if st.button("Discordo parcialmente"):
-        st.session_state.answers[st.session_state.question] = -1
+        st.session_state.answers[st.session_state.previous_question] = -1
 with c3:
     if st.button("Posicao Neutra"):
-        st.session_state.answers[st.session_state.question] = -0
+        st.session_state.answers[st.session_state.previous_question] = -0
 with c4:
     if st.button("Concordo parcialmente"):
-        st.session_state.answers[st.session_state.question] = 1
+        st.session_state.answers[st.session_state.previous_question] = 1
 with c5:
     if st.button("Concordo totalmente"):
-        st.session_state.answers[st.session_state.question] = 2
+        st.session_state.answers[st.session_state.previous_question] = 2
 
 st.header("Semelhanca politica", divider="green")
 
@@ -89,19 +92,12 @@ st.bar_chart(distances.sort_values(ascending=False))
 
 st.header("Historico", divider="red")
 
-# st.dataframe(party_answers)
+# st.text(st.session_state)
 
-c1, c2, c3, c4, c5 = st.columns(5)
-with c1:
-    st.markdown("Discordo totalmente")
-with c2:
-    st.markdown("Discordo parcialmente")
-with c3:
-    st.markdown("Posicao Neutra")
-with c4:
-    st.markdown("Concordo parcialmente")
-with c5:
-    st.markdown("Concordo totalmente")
+st.caption("""
+    Estas respostas sao baseadas no conhecimento que os autores teem dos varios partidos.
+    Caso exista alguma posicao que deva ser alterada, por favor entrem em [contacto por email](mailto:miguelptcosta1995@gmail.com)
+""")
 
 for q in st.session_state.answers.keys():
 
@@ -111,15 +107,23 @@ for q in st.session_state.answers.keys():
         c1, c2, c3, c4, c5 = st.columns(5)
         with c1:
             st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -2]))
+            if st.session_state.answers[q] == -2:
+                st.markdown("**YOUR CHOICE**")
         with c2:
             st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -1]))
+            if st.session_state.answers[q] == -1:
+                st.markdown("**YOUR CHOICE**")
         with c3:
             st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -0]))
+            if st.session_state.answers[q] == 0:
+                st.markdown("**YOUR CHOICE**")
         with c4:
             st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == 1]))
+            if st.session_state.answers[q] == 1:
+                st.markdown("**YOUR CHOICE**")
         with c5:
             st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == 2]))
+            if st.session_state.answers[q] == 2:
+                st.markdown("**YOUR CHOICE**")
 
-
-
-
+st.session_state.previous_question = question
