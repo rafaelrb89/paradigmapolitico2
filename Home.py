@@ -98,6 +98,7 @@ with gc2:
     st.caption("""
         Estas respostas são baseadas no conhecimento que os autores têm dos vários partidos.
         Caso exista alguma posição que deva ser alterada, por favor entrem em [contacto por email](mailto:miguelptcosta1995@gmail.com)
+        Na lista abaixo ✒️ representa o teu voto.
     """)
 
     for q in st.session_state.answers.keys():
@@ -109,22 +110,22 @@ with gc2:
             with c1:
                 st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -2]))
                 if st.session_state.answers[q] == -2:
-                    st.markdown("**YOUR CHOICE**")
+                    st.markdown("✒️")
             with c2:
                 st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -1]))
                 if st.session_state.answers[q] == -1:
-                    st.markdown("**YOUR CHOICE**")
+                    st.markdown("✒️")
             with c3:
                 st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -0]))
                 if st.session_state.answers[q] == 0:
-                    st.markdown("**YOUR CHOICE**")
+                    st.markdown("✒️")
             with c4:
                 st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == 1]))
                 if st.session_state.answers[q] == 1:
-                    st.markdown("**YOUR CHOICE**")
+                    st.markdown("✒️")
             with c5:
                 st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == 2]))
                 if st.session_state.answers[q] == 2:
-                    st.markdown("**YOUR CHOICE**")
+                    st.markdown("✒️")
 
     st.session_state.previous_question = question
