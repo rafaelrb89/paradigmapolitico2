@@ -10,6 +10,7 @@ st.set_page_config(
 
 # TODO: Random generator for different distributions. Include random angle in a n-sphere.
 
+
 st.header("Paradigma politico", divider="blue")
 st.markdown("""
     Ola! Construimos este site com o intuito de te ajudar a perceber o teu alinhamento político.
@@ -50,7 +51,8 @@ question = random.choice([
 if 'previous_question' not in st.session_state:
     st.session_state.previous_question = question
 
-gc1, gc2 = st.columns([6,4])
+
+gc1, gc2 = st.columns([7,3])
 
 with gc1:
     st.header("Próxima Questão", divider="orange")
@@ -74,58 +76,49 @@ with gc1:
         if st.button("Concordo totalmente"):
             st.session_state.answers[st.session_state.previous_question] = 2
 
+with gc2:
     st.header("Semelhança política", divider="green")
-
     respostas_uteis = party_answers[party_answers.index.isin(st.session_state.answers.keys())]
     respostas_uteis["Utilizador"] = [st.session_state.answers[q] for q in respostas_uteis.index]
     for p in political_parties.keys():
         respostas_uteis[p] -= respostas_uteis["Utilizador"]
         respostas_uteis[p] = respostas_uteis[p]**2
-
     respostas_uteis.drop("Utilizador", axis=1, inplace=True)
     distances = respostas_uteis.sum(axis=0)
     distances = 1/(1+distances)
     distances /= (distances.max() / 100)
+
     distances.sort_values(ascending=False, inplace=True)
     distances.reindex()
     st.bar_chart(distances.sort_values(ascending=False))
 
-with gc2:
-    st.header("Historico", divider="red")
 
-    # st.text(st.session_state)
+st.header("Historico", divider="red")
 
-    st.caption("""
-        Estas respostas são baseadas no conhecimento que os autores têm dos vários partidos.
-        Caso exista alguma posição que deva ser alterada, por favor entrem em [contacto por email](mailto:miguelptcosta1995@gmail.com)
-        Na lista abaixo ✒️ representa o teu voto.
-    """)
+# st.text(st.session_state)
 
-    for q in st.session_state.answers.keys():
+st.caption("""
+    Estas respostas são baseadas no conhecimento que os autores têm dos vários partidos.
+    Caso exista alguma posição que deva ser alterada, podem [entrar em contacto](https://forms.gle/YV4eT6r1R5zaxrF28).
+    Na lista abaixo, ✒️ representa o teu voto.
+""")
 
-        expander = st.expander(q)
-        with expander:
+for q in st.session_state.answers.keys():
 
-            c1, c2, c3, c4, c5 = st.columns(5)
-            with c1:
-                st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -2]))
-                if st.session_state.answers[q] == -2:
-                    st.markdown("✒️")
-            with c2:
-                st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -1]))
-                if st.session_state.answers[q] == -1:
-                    st.markdown("✒️")
-            with c3:
-                st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == -0]))
-                if st.session_state.answers[q] == 0:
-                    st.markdown("✒️")
-            with c4:
-                st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == 1]))
-                if st.session_state.answers[q] == 1:
-                    st.markdown("✒️")
-            with c5:
-                st.markdown(", ".join([p for p in political_parties.keys() if party_answers.loc[q, p] == 2]))
-                if st.session_state.answers[q] == 2:
-                    st.markdown("✒️")
+    alignments = [
+        ", ".join([
+            p for p in political_parties.keys()
+            if party_answers.loc[q, p] == v
+        ])
+        for v in range(-2, 3)
+    ]
+    index_to_be_updated = st.session_state.answers[q]+2
+    alignments[index_to_be_updated] = "[✒️] " + alignments[index_to_be_updated]
 
-    st.session_state.previous_question = question
+    expander = st.expander(q)
+    with expander:
+        for c, text in zip(st.columns(5), alignments):
+            with c:
+                st.markdown(text)
+
+st.session_state.previous_question = question
