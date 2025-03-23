@@ -8,6 +8,14 @@ st.set_page_config(
    layout="wide",
 )
 
+
+from streamlit.components.v1 import html
+js_code = """
+<script defer data-domain="paradigmapolitico.online" src="https://plausible.io/js/script.js"></script>
+"""
+html(js_code, height=100)
+
+
 # TODO: Random generator for different distributions. Include random angle in a n-sphere.
 
 
