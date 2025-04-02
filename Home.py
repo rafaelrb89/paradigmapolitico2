@@ -8,6 +8,17 @@ st.set_page_config(
    layout="wide",
 )
 
+st.markdown(
+    """
+    <style>
+        /* Mudar a cor de fundo da página */
+        body {
+            background-color: #006400;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 from streamlit.components.v1 import html
 js_code = """
