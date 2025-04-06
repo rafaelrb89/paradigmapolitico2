@@ -31,12 +31,12 @@ party_color_map = {
 # CSS Styling (Modified button styles)
 # -------------------------------------------------------------------------
 st.markdown(
-    """
+   """
     <style>
     /* --- General Text & Background --- */
     body { }
     h1, h2, h3, h4, h5, h6, p, div, span, label, input, textarea, li { color: #FFFFFF !important; }
-    a { color: #1E90FF !important; }
+    a { color: #1E90FF !important; } /* DodgerBlue */
     /* --- Altair Chart Visibility --- */
     .vega-visualization svg text { fill: #FFFFFF !important; font-size: 11px; }
     .vega-visualization svg .axis-title { font-size: 13px !important; fill: #E0E0E0 !important; }
@@ -49,53 +49,35 @@ st.markdown(
     /* --- Button Styling --- */
     /* Answer Buttons (Horizontal) */
     div[data-testid="stHorizontalBlock"] button { width: 100%; color: #ffffff !important; border-radius: 4px; border: none;}
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(1) button { background-color: #8B0000 !important; }
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(2) button { background-color: #FF6347 !important; }
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(3) button { background-color: #FFD700 !important; color: #000000 !important;}
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(4) button { background-color: #556B2F !important; }
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(5) button { background-color: #006400 !important; }
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(1) button { background-color: #8B0000 !important; } /* DarkRed */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(2) button { background-color: #FF6347 !important; } /* Tomato */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(3) button { background-color: #FFD700 !important; color: #000000 !important;} /* Gold (Yellow) */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(4) button { background-color: #556B2F !important; } /* DarkOliveGreen */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(5) button { background-color: #006400 !important; } /* DarkGreen */
 
-    /* **MODIFIED**: Skip Button Styling (Full Width) */
-    div[data-testid="stVerticalBlock"] button[kind="secondary"] { /* Target skip button specifically if possible */
-        /* Or use a more specific selector if Streamlit changes, but target the button directly */
-    }
-    /* General style for skip button if direct target fails */
-    .stButton button[kind="secondary"]:has(span:contains("Sem opinião")) { /* Less reliable selector */
-        background-color: #555555 !important;
+    /* Skip Button Styling */
+    div.stButton > button[kind="secondary"]:has(span:contains("Sem opinião")) {
+        background-color: #555555 !important; /* Dark Grey */
         color: #ffffff !important;
-        width: 100% !important; /* Force full width */
-        margin-top: 15px !important; /* Space above */
+        width: 100% !important;
+        margin-top: 15px !important;
         padding: 0.5em 1em !important;
         font-weight: bold;
         border: none;
         border-radius: 4px;
     }
-    /* Fallback if above selector doesn't work - apply to all secondary buttons on page */
-     /* div.stButton > button[kind="secondary"] { */
-         /* background-color: #555555 !important; */
-         /* color: #ffffff !important; */
-     /* } */
 
-
-    /* **MODIFIED**: Back Button Styling (Full Width) */
-    div[data-testid="stVerticalBlock"] button[kind="secondary"]:has(span:contains("Recuar")) { /* Less reliable selector */
-        background-color: #777777 !important;
+    /* Back Button Styling */
+    div.stButton > button[kind="secondary"]:has(span:contains("Recuar")) {
+        background-color: #777777 !important; /* Grey */
         color: #ffffff !important;
-        width: 100% !important; /* Force full width */
-        margin-top: 10px !important; /* Space above */
+        width: 100% !important;
+        margin-top: 10px !important;
         padding: 0.5em 1em !important;
         font-weight: bold;
         border: none;
         border-radius: 4px;
     }
-     /* Fallback for Back Button */
-     /* div.stButton > button[kind="secondary"]:last-of-type { */
-          /* background-color: #777777 !important; */
-          /* color: #ffffff !important; */
-          /* width: 100% !important; */
-          /* margin-top: 10px !important; */
-     /* } */
-
 
     /* Start/Midpoint Button Styling */
     .start-btn button, .midpoint-btn button { font-weight: bold !important; padding: 0.6em 1em !important; width: 100%; border-radius: 5px; border: none;}
@@ -106,13 +88,11 @@ st.markdown(
     /* Share Buttons */
     .share-btn { display: inline-block; padding: 8px 15px; margin: 5px 3px; border-radius: 5px; color: white !important; text-decoration: none; font-weight: bold; text-align: center; border: none; cursor: pointer; }
     .share-btn:hover { opacity: 0.9; text-decoration: none; color: white !important; }
-    .share-btn-facebook { background-color: #1877F2; }
-    .share-btn-x { background-color: #1DA1F2; }
-    .share-btn-whatsapp { background-color: #25D366; }
-    .share-btn-email { background-color: #777777; }
-    /* Center the share buttons container */
+    .share-btn-facebook { background-color: #1877F2; } /* Facebook Blue */
+    .share-btn-x { background-color: #1DA1F2; } /* Twitter Blue */
+    .share-btn-whatsapp { background-color: #25D366; } /* WhatsApp Green */
+    .share-btn-email { background-color: #777777; } /* Grey */
     .share-button-container { text-align: center; margin-top: 20px;}
-
 
     /* Expander Styling */
     .stExpander div[data-testid="stExpanderDetails"] { background-color: #222222; padding: 15px; border-radius: 5px; border: 1px solid #444444; }
