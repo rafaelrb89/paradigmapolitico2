@@ -46,6 +46,9 @@ st.markdown(
     h1, h2, h3, h4, h5, h6, p, div, span, label, input, textarea, li { color: #FFFFFF !important; }
     a { color: #1E90FF !important; } /* DodgerBlue */
     /* --- Altair Chart Visibility --- */
+    .vega-visualization { /* Target the container for Vega visualizations */
+         background-color: transparent !important; /* Force transparent background */
+    }    
     .vega-visualization svg text { fill: #FFFFFF !important; font-size: 11px; }
     .vega-visualization svg .axis-title { font-size: 13px !important; fill: #E0E0E0 !important; }
     .vega-visualization svg .legend-title { font-size: 13px !important; fill: #E0E0E0 !important; }
