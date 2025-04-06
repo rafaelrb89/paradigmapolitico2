@@ -33,6 +33,14 @@ party_color_map = {
 st.markdown(
    """
     <style>
+    body {
+        background-color: #0E1117 !important; /* Streamlit default dark background */
+    }
+    /* Target Streamlit's main app container as well for robustness */
+    .stApp {
+         background-color: #0E1117 !important;
+    }
+
     /* --- General Text & Background --- */
     body { }
     h1, h2, h3, h4, h5, h6, p, div, span, label, input, textarea, li { color: #FFFFFF !important; }
