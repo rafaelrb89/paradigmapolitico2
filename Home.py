@@ -71,7 +71,7 @@ st.markdown(
     }
     .skip-btn-wrapper button { /* Target button inside wrapper */
         background-color: #555555 !important; /* Dark Grey */
-        color: #ffffff !important;
+        color: #000000 !important;
         width: 100% !important; /* Should be handled by use_container_width in Python */
         padding: 0.5em 1em !important;
         font-weight: bold;
@@ -86,7 +86,7 @@ st.markdown(
     }
     .recuar-btn-wrapper button { /* Renamed from .recuar-btn button */
         background-color: #777777 !important; /* Grey */
-        color: #ffffff !important;
+        color: #000000 !important;
         width: 100% !important; /* Should be handled by use_container_width in Python */
         padding: 0.5em 1em !important;
         font-weight: bold;
