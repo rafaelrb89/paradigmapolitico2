@@ -386,7 +386,7 @@ def show_results():
     st.write("---")
 
     # --- 2. Political Compass Calculation & Chart (Yellow Liberal) ---
-    st.header("Bússola Política (3 Eixos)")
+    st.header("Bússola Política")
     compass_data = []
     full_user_answers_series = pd.Series(st.session_state.answers)
     user_econ, user_social, user_political = calculate_compass_scores(full_user_answers_series, questions, multipliers)
@@ -413,7 +413,7 @@ def show_results():
             tooltip=['Entidade', alt.Tooltip('Eixo Económico', format='.2f'), alt.Tooltip('Eixo Social', format='.2f'), alt.Tooltip('Eixo Político', format='.2f', title="Político (Aut/Lib)")],
             shape=alt.condition(alt.datum.Entidade == 'Você', alt.value('diamond'), alt.value('circle'))
         )
-        text = base.mark_text(align='left', baseline='middle', dx=9, fontSize=14, fontWeight='bold').encode(text='Entidade', color=alt.value('#FFFFFF'))
+        text = base.mark_text(align='left', baseline='middle', dx=9, fontSize=12, fontWeight='bold').encode(text='Entidade', color=alt.value('#FFFFFF'))
         compass_chart = (vline + hline + points + text).properties(
             background='transparent'
         ).interactive()
