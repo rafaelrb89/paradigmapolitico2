@@ -378,6 +378,8 @@ def show_results():
         y=alt.Y('Partido', sort='-x', title="Partido", axis=alt.Axis(labelLimit=200)),
         color=alt.Color('Partido', scale=alt.Scale(domain=color_domain, range=color_range), legend=None),
         tooltip=['Partido', alt.Tooltip('Concordância', format='.1%')]
+    ).properties(
+        background='transparent' # Add this line
     )
     st.altair_chart(affinity_chart, use_container_width=True)
     st.write("O gráfico acima mostra a concordância geral com base em todas as suas respostas. Quanto mais distante a resposta do utilizador da resposta de um determinado partido, menor o grau de semelhança. Um resultado de 100% indica uma concordância total com um determinado partido em todas as perguntas.")
@@ -412,7 +414,9 @@ def show_results():
             shape=alt.condition(alt.datum.Entidade == 'Você', alt.value('diamond'), alt.value('circle'))
         )
         text = base.mark_text(align='left', baseline='middle', dx=9, fontSize=14, fontWeight='bold').encode(text='Entidade', color=alt.value('#FFFFFF'))
-        compass_chart = (vline + hline + points + text).properties().interactive()
+        compass_chart = (vline + hline + points + text).properties(
+            background='transparent'
+        ).interactive()
         st.altair_chart(compass_chart, use_container_width=True)
         st.write(
              """
