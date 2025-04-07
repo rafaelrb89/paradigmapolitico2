@@ -250,7 +250,7 @@ def show_question(current_idx, question_list, total_questions_in_mode):
     button_pressed_type = None
     next_idx = current_idx + 1
 
-    # --- Answer Buttons ---
+     # --- Answer Buttons ---
     cols = st.columns(5)
     for i, (label, value) in enumerate(options.items()):
         with cols[i]:
@@ -264,18 +264,23 @@ def show_question(current_idx, question_list, total_questions_in_mode):
     # Use a container for the full-width buttons below
     button_below_container = st.container()
     with button_below_container:
-        # --- Skip Button (Full Width) ---
-        # Placed directly in the container, CSS should handle styling/width
+        # --- Skip Button (Full Width with Wrapper Class) ---
+        # **MODIFIED**: Add wrapper div with class
+        st.markdown("<div class='skip-btn-wrapper'>", unsafe_allow_html=True)
         if st.button("Sem opinião", key=f"q{current_idx}_skip", use_container_width=True):
-            st.session_state.answers.pop(question_text, None) # Ensure no answer stored/remove previous
+            st.session_state.answers.pop(question_text, None)
             st.session_state.idx = next_idx
             button_pressed_type = 'skip'
+        st.markdown("</div>", unsafe_allow_html=True) # Close wrapper
 
-        # --- Back Button (Full Width, only if not first question) ---
+        # --- Back Button (Full Width with Wrapper Class, only if not first question) ---
         if current_idx > 0:
+            # **MODIFIED**: Add wrapper div with class
+            st.markdown("<div class='recuar-btn-wrapper'>", unsafe_allow_html=True)
             if st.button("Recuar", key=f"q{current_idx}_back", use_container_width=True):
                 st.session_state.idx -= 1
                 button_pressed_type = 'back'
+            st.markdown("</div>", unsafe_allow_html=True) # Close wrapper
 
 
     # --- State Transition Logic ---
