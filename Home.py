@@ -405,7 +405,7 @@ def show_results():
         )
         # **MODIFIED**: Color scale range changed to Red-Grey-Yellow
         color_scale = alt.Scale(domain=[-1, 0, 1], range=['#FF0000', '#808080', '#FFFF00']) # Red, Grey, Yellow
-        points = base.mark_point(size=120, filled=True, opacity=0.9).encode(
+        points = base.mark_point(size=100, filled=True, opacity=0.9).encode(
             color=alt.Color('Eixo Político', scale=color_scale, legend=alt.Legend(title="Eixo Político", orient="top", titleOrient="left", gradientLength=200, format=".1f")),
             tooltip=['Entidade', alt.Tooltip('Eixo Económico', format='.2f'), alt.Tooltip('Eixo Social', format='.2f'), alt.Tooltip('Eixo Político', format='.2f', title="Político (Aut/Lib)")],
             shape=alt.condition(alt.datum.Entidade == 'Você', alt.value('diamond'), alt.value('circle'))
@@ -420,7 +420,7 @@ def show_results():
             **Como interpretar a Bússola Política:**
             * **Posição Horizontal (Eixo X):** Eixo **Económico**. Esquerda (-1) vs Direita (+1).
             * **Posição Vertical (Eixo Y):** Eixo **Social**. Conservador (-1) vs Progressista (+1).
-            * **Cor:** Eixo **Política**. Vermelho (Autoritário, -1) -> Cinzento (Neutro, 0) -> Amarelo (Liberal, +1).
+            * **Côr:** Eixo **Político**. Vermelho (Autoritário, -1) -> Cinzento (Neutro, 0) -> Amarelo (Liberal, +1).
 
             A sua posição ("Você") é marcada com um losango (♦). As posições são calculadas com base nas respostas.
             """ # Updated explanation for marker and overlap acknowledgement
@@ -457,7 +457,7 @@ def show_results():
     share_text_base = f"Fiz o teste Paradigma Político! O meu partido mais próximo foi {top_party} ({top_affinity:.0%}). Descobre a tua posição:"
     share_text_encoded = urllib.parse.quote_plus(f"{share_text_base} {APP_URL}")
     share_text_twitter = urllib.parse.quote_plus(f"{share_text_base}")
-    app_url_encoded = urllib.parse.quote_plus(APP_URL)
+    app_url_encoded = urllib.parse.quote_plus(app_url_encoded)
     hashtags = "ParadigmaPoliticoPT,PoliticaPortuguesa"
 
     # Construct Share URLs
