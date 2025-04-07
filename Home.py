@@ -403,8 +403,8 @@ def show_results():
         vline = alt.Chart(origin_lines).mark_rule(strokeDash=[3,3], color='grey', size=0.5).encode(x='zero:Q')
         hline = alt.Chart(origin_lines).mark_rule(strokeDash=[3,3], color='grey', size=0.5).encode(y='zero:Q')
         base = alt.Chart(compass_df).encode(
-            x=alt.X('Eixo Económico', scale=alt.Scale(domain=[-1, 1]), axis=alt.Axis(title='Económico (Esquerda <-> Direita)', grid=False, format=".1f")),
-            y=alt.Y('Eixo Social', scale=alt.Scale(domain=[-1, 1]), axis=alt.Axis(title='Social (Conservador <-> Progressista)', grid=False, format=".1f"))
+            x=alt.X('Eixo Económico', scale=alt.Scale(domain=[-1.1, 1.1]), axis=alt.Axis(title='Económico (Esquerda <-> Direita)', grid=False, format=".1f")),
+            y=alt.Y('Eixo Social', scale=alt.Scale(domain=[-1.1, 1.1]), axis=alt.Axis(title='Social (Conservador <-> Progressista)', grid=False, format=".1f"))
         )
         # **MODIFIED**: Color scale range changed to Red-Grey-Yellow
         color_scale = alt.Scale(domain=[-1, 0, 1], range=['#FF0000', '#808080', '#FFFF00']) # Red, Grey, Yellow
