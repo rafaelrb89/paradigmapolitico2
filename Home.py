@@ -28,27 +28,25 @@ party_color_map = {
 }
 
 # -------------------------------------------------------------------------
-# CSS Styling (Modified button styles)
+# CSS Styling (Corrected for Skip/Back buttons, Backgrounds)
 # -------------------------------------------------------------------------
 st.markdown(
-   """
+    """
     <style>
-    body {
-        background-color: #0E1117 !important; /* Streamlit default dark background */
-    }
-    /* Target Streamlit's main app container as well for robustness */
-    .stApp {
-         background-color: #0E1117 !important;
-    }
-
     /* --- General Text & Background --- */
-    body { }
+    body {
+        background-color: #0E1117 !important; /* Force dark background */
+    }
+    .stApp {
+         background-color: #0E1117 !important; /* Target main container */
+    }
     h1, h2, h3, h4, h5, h6, p, div, span, label, input, textarea, li { color: #FFFFFF !important; }
-    a { color: #1E90FF !important; } /* DodgerBlue */
+    a { color: #1E90FF !important; } /* DodgerBlue links */
+
     /* --- Altair Chart Visibility --- */
-    .vega-visualization { /* Target the container for Vega visualizations */
-         background-color: transparent !important; /* Force transparent background */
-    }    
+    .vega-visualization {
+         background-color: transparent !important; /* Force transparent chart background */
+    }
     .vega-visualization svg text { fill: #FFFFFF !important; font-size: 11px; }
     .vega-visualization svg .axis-title { font-size: 13px !important; fill: #E0E0E0 !important; }
     .vega-visualization svg .legend-title { font-size: 13px !important; fill: #E0E0E0 !important; }
@@ -60,33 +58,39 @@ st.markdown(
     /* --- Button Styling --- */
     /* Answer Buttons (Horizontal) */
     div[data-testid="stHorizontalBlock"] button { width: 100%; color: #ffffff !important; border-radius: 4px; border: none;}
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(1) button { background-color: #8B0000 !important; } /* DarkRed */
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(2) button { background-color: #FF6347 !important; } /* Tomato */
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(3) button { background-color: #FFD700 !important; color: #000000 !important;} /* Gold (Yellow) */
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(4) button { background-color: #556B2F !important; } /* DarkOliveGreen */
-    div[data-testid="stHorizontalBlock"] > div:nth-of-type(5) button { background-color: #006400 !important; } /* DarkGreen */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(1) button { background-color: #8B0000 !important; } /* Discordo totalmente */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(2) button { background-color: #FF6347 !important; } /* Discordo parcialmente */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(3) button { background-color: #FFD700 !important; color: #000000 !important;} /* Neutro ou Ambíguo */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(4) button { background-color: #556B2F !important; } /* Concordo parcialmente */
+    div[data-testid="stHorizontalBlock"] > div:nth-of-type(5) button { background-color: #006400 !important; } /* Concordo totalmente */
 
-    /* Skip Button Styling */
-    div.stButton > button[kind="secondary"]:has(span:contains("Sem opinião")) {
+    /* **NEW**: Skip Button Styling (Using Wrapper Class) */
+    .skip-btn-wrapper {
+        margin-top: 15px !important; /* Space above */
+        margin-bottom: 5px !important; /* Space below */
+    }
+    .skip-btn-wrapper button { /* Target button inside wrapper */
         background-color: #555555 !important; /* Dark Grey */
         color: #ffffff !important;
-        width: 100% !important;
-        margin-top: 15px !important;
+        width: 100% !important; /* Should be handled by use_container_width in Python */
         padding: 0.5em 1em !important;
         font-weight: bold;
-        border: none;
+        border: none !important;
         border-radius: 4px;
     }
 
-    /* Back Button Styling */
-    div.stButton > button[kind="secondary"]:has(span:contains("Recuar")) {
+    /* **NEW**: Back Button Styling (Using Wrapper Class) */
+    .recuar-btn-wrapper { /* Renamed from recuar-btn-container */
+       margin-top: 10px !important; /* Space above */
+       margin-bottom: 10px !important; /* Space below */
+    }
+    .recuar-btn-wrapper button { /* Renamed from .recuar-btn button */
         background-color: #777777 !important; /* Grey */
         color: #ffffff !important;
-        width: 100% !important;
-        margin-top: 10px !important;
+        width: 100% !important; /* Should be handled by use_container_width in Python */
         padding: 0.5em 1em !important;
         font-weight: bold;
-        border: none;
+        border: none !important;
         border-radius: 4px;
     }
 
@@ -99,10 +103,10 @@ st.markdown(
     /* Share Buttons */
     .share-btn { display: inline-block; padding: 8px 15px; margin: 5px 3px; border-radius: 5px; color: white !important; text-decoration: none; font-weight: bold; text-align: center; border: none; cursor: pointer; }
     .share-btn:hover { opacity: 0.9; text-decoration: none; color: white !important; }
-    .share-btn-facebook { background-color: #1877F2; } /* Facebook Blue */
-    .share-btn-x { background-color: #1DA1F2; } /* Twitter Blue */
-    .share-btn-whatsapp { background-color: #25D366; } /* WhatsApp Green */
-    .share-btn-email { background-color: #777777; } /* Grey */
+    .share-btn-facebook { background-color: #1877F2; }
+    .share-btn-x { background-color: #1DA1F2; }
+    .share-btn-whatsapp { background-color: #25D366; }
+    .share-btn-email { background-color: #777777; }
     .share-button-container { text-align: center; margin-top: 20px;}
 
     /* Expander Styling */
