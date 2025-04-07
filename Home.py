@@ -15,7 +15,7 @@ st.set_page_config(
 # -------------------------------------------------------------------------
 # **NEW**: Define App URL Placeholder (REPLACE THIS WHEN DEPLOYED)
 # -------------------------------------------------------------------------
-APP_URL = "https://YOUR_APP_DEPLOYED_URL_HERE" # IMPORTANT: Replace this!
+APP_URL = "https://paradigmapolitico2.streamlit.app/" # IMPORTANT: Replace this!
 
 # -------------------------------------------------------------------------
 # Custom Color Map for Affinity Chart
@@ -457,7 +457,7 @@ def show_results():
     share_text_base = f"Fiz o teste Paradigma Político! O meu partido mais próximo foi {top_party} ({top_affinity:.0%}). Descobre a tua posição:"
     share_text_encoded = urllib.parse.quote_plus(f"{share_text_base} {APP_URL}")
     share_text_twitter = urllib.parse.quote_plus(f"{share_text_base}")
-    app_url_encoded = urllib.parse.quote_plus(app_url_encoded)
+    app_url_encoded = urllib.parse.quote_plus(APP_URL)
     hashtags = "ParadigmaPoliticoPT,PoliticaPortuguesa"
 
     # Construct Share URLs
