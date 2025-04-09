@@ -121,70 +121,169 @@ try:
     party_answers_df = pd.read_csv(CSV_FILE)
     required_cols = ["Pergunta", "Multiplicador", "Curto"]
     missing_req_cols = [col for col in required_cols if col not in party_answers_df.columns]
-    if missing_req_cols: st.error(f"Erro: Coluna(s) necessária(s) não encontrada(s): {', '.join(missing_req_cols)}"); st.stop()
+    if missing_req_cols:
+        st.error(f"Erro: Coluna(s) necessária(s) não encontrada(s): {', '.join(missing_req_cols)}")
+        st.stop()
 
     party_answers_df.set_index("Pergunta", inplace=True)
     multipliers = party_answers_df['Multiplicador']
     is_short_question_col = party_answers_df['Curto']
 
-    if not multipliers.isin([1, -1]).all(): st.warning("Atenção: 'Multiplicador' contém valores inválidos.")
+    if not multipliers.isin([1, -1]).all():
+        st.warning("Atenção: 'Multiplicador' contém valores inválidos.")
 
     try:
         short_questions_indices = pd.to_numeric(is_short_question_col, errors='coerce') == 1
         short_questions_list = party_answers_df[short_questions_indices].index.tolist()
-        if len(short_questions_list) != SHORT_TEST_SIZE: st.warning(f"Atenção: Encontradas {len(short_questions_list)} perguntas curtas, esperado {SHORT_TEST_SIZE}.")
+        if len(short_questions_list) != SHORT_TEST_SIZE:
+            st.warning(f"Atenção: Encontradas {len(short_questions_list)} perguntas curtas, esperado {SHORT_TEST_SIZE}.")
         can_run_short_test = bool(short_questions_list)
-        if not can_run_short_test: st.error("Erro: Nenhuma pergunta para teste curto (coluna 'Curto').")
-    except Exception as e: st.error(f"Erro ao processar coluna 'Curto': {e}"); short_questions_list = []; can_run_short_test = False
+        if not can_run_short_test:
+            st.error("Erro: Nenhuma pergunta para teste curto (coluna 'Curto').")
+    except Exception as e:
+        st.error(f"Erro ao processar coluna 'Curto': {e}")
+        short_questions_list = []
+        can_run_short_test = False
 
     party_answers = party_answers_df.drop(columns=['Multiplicador', 'Curto'], errors='ignore')
 
-except FileNotFoundError: st.error(f"Erro: Ficheiro '{CSV_FILE}' não encontrado."); st.stop()
-except Exception as e: st.error(f"Erro ao ler ou processar CSV: {e}"); st.stop()
+except FileNotFoundError:
+    st.error(f"Erro: Ficheiro '{CSV_FILE}' não encontrado.")
+    st.stop()
+except Exception as e:
+    st.error(f"Erro ao ler ou processar CSV: {e}")
+    st.stop()
 
 questions = list(party_answers.index)
 TOTAL_QUESTIONS_IN_FILE = len(questions)
 
-if TOTAL_QUESTIONS_IN_FILE < EXPECTED_TOTAL_QUESTIONS: st.warning(f"Atenção: Ficheiro tem {TOTAL_QUESTIONS_IN_FILE} perguntas, esperado {EXPECTED_TOTAL_QUESTIONS}.")
+if TOTAL_QUESTIONS_IN_FILE < EXPECTED_TOTAL_QUESTIONS:
+    st.warning(f"Atenção: Ficheiro tem {TOTAL_QUESTIONS_IN_FILE} perguntas, esperado {EXPECTED_TOTAL_QUESTIONS}.")
 
 # Define parties and URLs
 defined_parties = {
-    "AD": "https://ad2024.pt/", "ADN": "https://adn.com.pt/", "BE": "https://www.bloco.org/",
-    "Chega": "https://partidochega.pt/", "IL": "https://iniciativaliberal.pt/", "JPP": "https://juntospelopovo.pt/",
-    "Livre": "https://partidolivre.pt/", "Nova Direita": "https://novadireita.pt/", "PAN": "https://pan-portugal.com/",
-    "CDU": "https://www.pcp.pt/", "PCTP/MRPP": "https://www.pctpmrpp.org/", "PS": "https://ps.pt/",
-    "RIR": "https://partido-rir.pt/", "Volt": "https://voltportugal.org/",
+    "AD": "https://ad2024.pt/",
+    "ADN": "https://adn.com.pt/",
+    "BE": "https://www.bloco.org/",
+    "CDU": "https://www.pcp.pt/",
+    "Chega": "https://partidochega.pt/",
+    "IL": "https://iniciativaliberal.pt/",
+    "JPP": "https://juntospelopovo.pt/",
+    "Livre": "https://partidolivre.pt/",
+    "Nova Direita": "https://novadireita.pt/",
+    "PAN": "https://pan-portugal.com/",
+    "PCTP/MRPP": "https://www.pctpmrpp.org/",
+    "PS": "https://ps.pt/",
+    "RIR": "https://partido-rir.pt/",
+    "Volt": "https://voltportugal.org/",
 }
 valid_parties_in_csv = [p for p in defined_parties if p in party_answers.columns]
 missing_parties = [p for p in defined_parties if p not in party_answers.columns]
 
-if missing_parties: st.warning(f"Partidos definidos mas não encontrados no CSV: {', '.join(missing_parties)}")
-if not valid_parties_in_csv: st.error("Erro: Nenhum partido definido encontrado no CSV."); st.stop()
+if missing_parties:
+    st.warning(f"Partidos definidos mas não encontrados no CSV: {', '.join(missing_parties)}")
+if not valid_parties_in_csv:
+    st.error("Erro: Nenhum partido definido encontrado no CSV.")
+    st.stop()
 
 party_answers = party_answers[valid_parties_in_csv]
 political_parties = {p: url for p, url in defined_parties.items() if p in valid_parties_in_csv}
 party_color_map = {p: color for p, color in party_color_map.items() if p in valid_parties_in_csv}
 party_details = { # Assume populated as before
-     "PS": {"fundacao": "19/04/1973", "descricao": "Centro-esquerda", "lider": "Pedro Nuno Santos", "programa_url": "https://ps.pt/programa/", "wiki_url": "https://pt.wikipedia.org/wiki/Partido_Socialista_(Portugal)"},
-     "AD": {"fundacao": "PPD/PSD: 06/05/1974", "descricao": "Centro-direita", "lider": "Luís Montenegro", "programa_url": "https://ad2024.pt/programa-eleitoral/", "wiki_url": "https://pt.wikipedia.org/wiki/AD_%E2%80%94_ALIAN%C3%87A_DEMOCR%C3%81TICA_(2024-Presente)"},
-     "Livre": {"fundacao": "2014", "descricao": "Esquerda ecologista", "lider": "Rui Tavares e Isabel Mendes Lopes", "programa_url": "https://partidolivre.pt/programa", "wiki_url": "https://pt.wikipedia.org/wiki/Livre_(partido_pol%C3%ADtico)"},
-     "PAN": {"fundacao": "2011", "descricao": "Ambientalista", "lider": "Inês Sousa Real", "programa_url": "https://pan-portugal.com/programas/", "wiki_url": "https://pt.wikipedia.org/wiki/Pessoas%E2%80%93Animais%E2%80%93Natureza"},
-     "IL": {"fundacao": "2017", "descricao": "Liberal", "lider": "Rui Rocha", "programa_url": "https://iniciativaliberal.pt/programa-politico/", "wiki_url": "https://pt.wikipedia.org/wiki/Iniciativa_Liberal"},
-     "BE": {"fundacao": "1999", "descricao": "Esquerda", "lider": "Mariana Mortágua", "programa_url": "https://www.bloco.org/programa", "wiki_url": "https://pt.wikipedia.org/wiki/Bloco_de_Esquerda"},
-     "CDU": {"fundacao": "PCP: 1921", "descricao": "Coligação Comunista/Verdes", "lider": "Paulo Raimundo", "programa_url": "https://www.cdu.pt/", "wiki_url": "https://pt.wikipedia.org/wiki/Coliga%C3%A7%C3%A3o_Democr%C3%A1tica_Unit%C3%A1ria"},
-     "Chega": {"fundacao": "2019", "descricao": "Direita nacionalista/populista", "lider": "André Ventura", "programa_url": "https://partidochega.pt/programa/", "wiki_url": "https://pt.wikipedia.org/wiki/Chega_(partido_pol%C3%ADtico)"},
-     "RIR": {"fundacao": "2019", "descricao": "Centrista", "lider": "Márcia Henriques", "programa_url": "https://partido-rir.pt/ideias-e-programa/", "wiki_url": "https://pt.wikipedia.org/wiki/Reagir_Incluir_Reciclar"},
-     "JPP": {"fundacao": "2015", "descricao": "Regionalista (Madeira)", "lider": "Élvio Sousa, Filipe Sousa", "programa_url": "https://juntospelopovo.pt/", "wiki_url": "https://pt.wikipedia.org/wiki/Juntos_pelo_Povo"},
-     "ADN": {"fundacao": "2015/2021", "descricao": "Conservador nacionalista", "lider": "Bruno Fialho", "programa_url": "https://adn.com.pt/programa-eleitoral/", "wiki_url": "https://pt.wikipedia.org/wiki/Alternativa_Democr%C3%A1tica_Nacional"},
-     "PCTP/MRPP": {"fundacao": "1970/1976", "descricao": "Comunista (ML)", "lider": "N/A", "programa_url": "https://www.pctpmrpp.org/", "wiki_url": "https://pt.wikipedia.org/wiki/Partido_Comunista_dos_Trabalhadores_Portugueses"},
-     "Nova Direita": {"fundacao": "2023", "descricao": "Conservador liberal", "lider": "Ossanda Liber", "programa_url": "https://novadireita.pt/manifesto/", "wiki_url": "https://pt.wikipedia.org/wiki/Nova_Direita_(Portugal)"},
-     "Volt": {"fundacao": "2020", "descricao": "Pan-europeu progressista", "lider": "Duarte Costa e Inês Bravo Figueiredo", "programa_url": "https://voltportugal.org/programa", "wiki_url": "https://pt.wikipedia.org/wiki/Volt_Portugal"}
+     "PS": {
+         "fundacao": "19/04/1973",
+         "descricao": "Centro-esquerda",
+         "lider": "Pedro Nuno Santos",
+         "programa_url": "https://ps.pt/programa/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Partido_Socialista_(Portugal)"},
+     "AD": {
+         "fundacao": "PPD/PSD: 06/05/1974",
+         "descricao": "Centro-direita",
+         "lider": "Luís Montenegro",
+         "programa_url": "https://ad2024.pt/programa-eleitoral/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/AD_%E2%80%94_ALIAN%C3%87A_DEMOCR%C3%81TICA_(2024-Presente)"},
+     "Livre": {
+         "fundacao": "2014",
+         "descricao": "Esquerda ecologista",
+         "lider": "Rui Tavares e Isabel Mendes Lopes",
+         "programa_url": "https://partidolivre.pt/programa",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Livre_(partido_pol%C3%ADtico)"},
+     "PAN": {
+         "fundacao": "2011",
+         "descricao": "Ambientalista",
+         "lider": "Inês Sousa Real",
+         "programa_url": "https://pan-portugal.com/programas/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Pessoas%E2%80%93Animais%E2%80%93Natureza"},
+     "IL": {
+         "fundacao": "2017",
+         "descricao": "Liberal",
+         "lider": "Rui Rocha",
+         "programa_url": "https://iniciativaliberal.pt/programa-politico/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Iniciativa_Liberal"},
+     "BE": {
+         "fundacao": "1999",
+         "descricao": "Esquerda",
+         "lider": "Mariana Mortágua",
+         "programa_url": "https://www.bloco.org/programa",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Bloco_de_Esquerda"},
+     "CDU": {
+         "fundacao": "PCP: 1921",
+         "descricao": "Coligação Comunista/Verdes",
+         "lider": "Paulo Raimundo",
+         "programa_url": "https://www.cdu.pt/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Coliga%C3%A7%C3%A3o_Democr%C3%A1tica_Unit%C3%A1ria"},
+     "Chega": {
+         "fundacao": "2019",
+         "descricao": "Direita nacionalista/populista",
+         "lider": "André Ventura",
+         "programa_url": "https://partidochega.pt/programa/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Chega_(partido_pol%C3%ADtico)"},
+     "RIR": {
+         "fundacao": "2019",
+         "descricao": "Centrista",
+         "lider": "Márcia Henriques",
+         "programa_url": "https://partido-rir.pt/ideias-e-programa/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Reagir_Incluir_Reciclar"},
+     "JPP": {
+         "fundacao": "2015",
+         "descricao": "Regionalista (Madeira)",
+         "lider": "Élvio Sousa, Filipe Sousa",
+         "programa_url": "https://juntospelopovo.pt/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Juntos_pelo_Povo"},
+     "ADN": {
+         "fundacao": "2015/2021",
+         "descricao": "Conservador nacionalista",
+         "lider": "Bruno Fialho",
+         "programa_url": "https://adn.com.pt/programa-eleitoral/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Alternativa_Democr%C3%A1tica_Nacional"},
+     "PCTP/MRPP": {
+         "fundacao": "1970/1976",
+         "descricao": "Comunista (ML)",
+         "lider": "N/A",
+         "programa_url": "https://www.pctpmrpp.org/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Partido_Comunista_dos_Trabalhadores_Portugueses"},
+     "Nova Direita": {
+         "fundacao": "2023",
+         "descricao": "Conservador liberal",
+         "lider": "Ossanda Liber",
+         "programa_url": "https://novadireita.pt/manifesto/",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Nova_Direita_(Portugal)"},
+     "Volt": {
+         "fundacao": "2020",
+         "descricao": "Pan-europeu progressista",
+         "lider": "Duarte Costa e Inês Bravo Figueiredo",
+         "programa_url": "https://voltportugal.org/programa",
+         "wiki_url": "https://pt.wikipedia.org/wiki/Volt_Portugal"
+     }
  }
 party_details = {p: details for p, details in party_details.items() if p in valid_parties_in_csv}
 
-if 'mode' not in st.session_state: st.session_state.mode = 'intro'
-if 'idx' not in st.session_state: st.session_state.idx = -1
-if 'answers' not in st.session_state: st.session_state.answers = {}
+if 'mode' not in st.session_state:
+    st.session_state.mode = 'intro'
+if 'idx' not in st.session_state:
+    st.session_state.idx = -1
+if 'answers' not in st.session_state:
+    st.session_state.answers = {}
 
 # -------------------------------------------------------------------------
 # Helper Functions
@@ -192,33 +291,44 @@ if 'answers' not in st.session_state: st.session_state.answers = {}
 
 def show_intro():
     """Shows the intro page with test length choice."""
-    st.title("Paradigma Político")
-    st.write("Bem-vindo! Este teste visa **avaliar o seu posicionamento político**. O teste compara também o seu posicionamento em relação aos partidos portugueses que tiveram mais do que 7000 votos nas eleições legislativas de 2024 (mínimo de assinaturas para a formação de um partido político em Portugal).")
-    st.write("Em cada pergunta, o utilizador será confrontado com uma afirmação e será pedido para escolher qual o nível de concordância. As perguntas visam avaliar a posição relativamente a valores políticos abstractos e intemporais, não a questões especificas da realidade portuguesa num determinado ponto no tempo.")
-    st.write("O teste completo é composto por **60 perguntas** (20 perguntas por eixo). A descrição de cada um destes eixos é a seguinte:")
-    st.write("")
-    st.write("**Eixo Económico**: Mede o grau de intervenção geral do Estado na Economia.")
-    st.write("**Eixo Social**: Mede o grau de abertura a mudanças sociais.")
-    st.write("**Eixo Político**: Mede o grau de liberalismo político.")
-    st.write("")
-    st.write("Os resultados do teste mostram o posicionamento relativamente aos vários partidos políticos portugueses nos 3 eixos através de um mapa com 3 dimensões.")
-    st.write("Finalmente, o teste mostra ao grau de semelhança das resposta do utilzador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste.")
-    st.write("")
+
     # Use len(short_questions_list) if available, else SHORT_TEST_SIZE as fallback text
     short_q_count = len(short_questions_list) if can_run_short_test else SHORT_TEST_SIZE
-    st.write(f"Pode optar por fazer um teste **curto de {short_q_count} perguntas** (resultados mais rápidos mas menos precisos) ou o teste **completo de {len(questions)} perguntas** (resultados mais fiáveis).")
-    st.write("---")
+
+    st.title("Paradigma Político")
+    st.write(f"""
+        Bem-vindo! Este teste visa **avaliar o seu posicionamento político**. O teste compara também o seu posicionamento em relação aos partidos portugueses que tiveram mais do que 7000 votos nas eleições legislativas de 2024 (mínimo de assinaturas para a formação de um partido político em Portugal).
+        Em cada pergunta, o utilizador será confrontado com uma afirmação e será pedido para escolher qual o nível de concordância. As perguntas visam avaliar a posição relativamente a valores políticos abstractos e intemporais, não a questões especificas da realidade portuguesa num determinado ponto no tempo.
+        O teste completo é composto por **60 perguntas** (20 perguntas por eixo). A descrição de cada um destes eixos é a seguinte:
+        
+        **Eixo Económico**: Mede o grau de intervenção geral do Estado na Economia.
+        **Eixo Social**: Mede o grau de abertura a mudanças sociais.
+        **Eixo Político**: Mede o grau de liberalismo político.
+        
+        Os resultados do teste mostram o posicionamento relativamente aos vários partidos políticos portugueses nos 3 eixos através de um mapa com 3 dimensões.
+        Finalmente, o teste mostra ao grau de semelhança das resposta do utilzador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste.
+        
+        Pode optar por fazer um teste **curto de {short_q_count} perguntas** (resultados mais rápidos mas menos precisos) ou o teste **completo de {len(questions)} perguntas** (resultados mais fiáveis).
+        ---
+    """)
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("<div class='start-btn'>", unsafe_allow_html=True)
         if st.button(f"Iniciar Teste Curto ({short_q_count} Perguntas)", key="start_short", disabled=not can_run_short_test):
-            st.session_state.mode = 'short'; st.session_state.idx = 0; st.session_state.answers = {}; st.rerun()
+            st.session_state.mode = 'short'
+            st.session_state.idx = 0
+            st.session_state.answers = {}
+            st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-        if not can_run_short_test: st.caption("Opção indisponível.")
+        if not can_run_short_test:
+            st.caption("Opção indisponível.")
     with col2:
         st.markdown("<div class='start-btn'>", unsafe_allow_html=True)
         if st.button(f"Iniciar Teste Completo ({len(questions)} Perguntas)", key="start_full"):
-            st.session_state.mode = 'full'; st.session_state.idx = 0; st.session_state.answers = {}; st.rerun()
+            st.session_state.mode = 'full'
+            st.session_state.idx = 0
+            st.session_state.answers = {}
+            st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     st.write("---")
     st.markdown("**Partidos incluídos:** " + " | ".join([f"[{p}]({url})" for p, url in political_parties.items()]))
@@ -227,7 +337,10 @@ def show_intro():
 def show_question(current_idx, question_list, total_questions_in_mode):
     """Shows the current question, answer buttons, skip, and back buttons."""
     if not (0 <= current_idx < len(question_list)):
-        st.error("Erro interno: Índice de pergunta inválido."); st.session_state.mode = 'intro'; st.session_state.idx = -1; st.rerun(); return
+        st.error("Erro interno: Índice de pergunta inválido.")
+        st.session_state.mode = 'intro'
+        st.session_state.idx = -1
+        st.rerun()
 
     question_text = question_list[current_idx]
     st.header(f"Pergunta {current_idx + 1} de {total_questions_in_mode}")
@@ -236,8 +349,11 @@ def show_question(current_idx, question_list, total_questions_in_mode):
 
     # Define options, with "Neutro" renamed
     options = {
-        "Discordo totalmente": -2, "Discordo parcialmente": -1, "Neutro ou Ambíguo": 0,
-        "Concordo parcialmente": 1, "Concordo totalmente": 2
+        "Discordo totalmente": -2,
+        "Discordo parcialmente": -1,
+        "Neutro ou Ambíguo": 0,
+        "Concordo parcialmente": 1,
+        "Concordo totalmente": 2
     }
     button_pressed_type = None
     next_idx = current_idx + 1
@@ -302,26 +418,32 @@ def show_midpoint_choice():
     with col1:
          st.markdown("<div class='midpoint-btn'>", unsafe_allow_html=True)
          if st.button(f"Ver Resultados ({len(short_questions_list)} Perguntas)", key="results_short"):
-              st.session_state.mode = 'results'; st.rerun()
+              st.session_state.mode = 'results'
+              st.rerun()
          st.markdown("</div>", unsafe_allow_html=True)
     with col2:
          st.markdown("<div class='midpoint-btn'>", unsafe_allow_html=True)
          if st.button(f"Continuar Teste ({len(questions)} Perguntas)", key="continue_full"):
-              st.session_state.mode = 'full'; st.rerun()
+              st.session_state.mode = 'full'
+              st.rerun()
          st.markdown("</div>", unsafe_allow_html=True)
 
 
 # (calculate_compass_scores remains unchanged)
 def calculate_compass_scores(entity_answers, all_questions_list, question_multipliers):
     """ Calculates Economic, Social, and Political scores (-1 to 1) using multipliers. """
-    scores = {'Economic': 0.0, 'Social': 0.0, 'Political': 0.0}
+    scores = {
+        'Economic': 0.0,
+        'Political': 0.0,
+        'Social': 0.0,
+    }
     econ_end = min(len(all_questions_list), NUM_ECONOMIC_QUESTIONS)
     social_end = min(len(all_questions_list), NUM_ECONOMIC_QUESTIONS + NUM_SOCIAL_QUESTIONS)
     political_end = min(len(all_questions_list), EXPECTED_TOTAL_QUESTIONS)
     axis_definitions = {
         'Economic': all_questions_list[0:econ_end],
+        'Political': all_questions_list[NUM_ECONOMIC_QUESTIONS + NUM_SOCIAL_QUESTIONS : political_end],
         'Social': all_questions_list[NUM_ECONOMIC_QUESTIONS:social_end],
-        'Political': all_questions_list[NUM_ECONOMIC_QUESTIONS + NUM_SOCIAL_QUESTIONS : political_end]
     }
     for axis_name, question_texts in axis_definitions.items():
         if question_texts:
@@ -343,15 +465,21 @@ def show_results():
 
     if not perguntas_respondidas_list:
         st.warning("Não respondeu a nenhuma pergunta.")
-        if st.button("Reiniciar Teste"): st.session_state.mode = 'intro'; st.session_state.idx = -1; st.session_state.answers = {}; st.rerun()
+        if st.button("Reiniciar Teste"):
+            st.session_state.mode = 'intro'
+            st.session_state.idx = -1
+            st.session_state.answers = {}; st.rerun()
         return
 
     # Add note about test length
     is_short_result = can_run_short_test and (num_perguntas_respondidas == len(short_questions_list)) and (len(short_questions_list) < len(questions))
     is_full_result = (num_perguntas_respondidas == len(questions))
-    if is_short_result : st.info(f"Resultados baseados no teste curto de {num_perguntas_respondidas} perguntas.")
-    elif is_full_result: st.info(f"Resultados baseados no teste completo de {num_perguntas_respondidas} perguntas.")
-    else: st.info(f"Resultados baseados em {num_perguntas_respondidas} perguntas respondidas.")
+    if is_short_result :
+        st.info(f"Resultados baseados no teste curto de {num_perguntas_respondidas} perguntas.")
+    elif is_full_result:
+        st.info(f"Resultados baseados no teste completo de {num_perguntas_respondidas} perguntas.")
+    else:
+        st.info(f"Resultados baseados em {num_perguntas_respondidas} perguntas respondidas.")
 
 
     # --- 1. Affinity Score Calculation & Chart ---
@@ -367,7 +495,8 @@ def show_results():
     max_dist = 4 * num_perguntas_respondidas if num_perguntas_respondidas > 0 else 1
     affinity = (1 - (total_distances_series / max_dist)).clip(lower=0.0, upper=1.0)
     affinity.sort_values(ascending=False, inplace=True)
-    affinity_df = affinity.reset_index(); affinity_df.columns = ['Partido', 'Concordância']
+    affinity_df = affinity.reset_index()
+    affinity_df.columns = ['Partido', 'Concordância']
     color_domain = affinity_df['Partido'].tolist()
     color_range = [party_color_map.get(p, "#CCCCCC") for p in color_domain]
     affinity_chart = alt.Chart(affinity_df).mark_bar().encode(
@@ -426,8 +555,9 @@ def show_results():
             """ # Updated explanation for marker and overlap acknowledgement
         )
         st.caption("Nota: Se as etiquetas se sobrepuserem, use o zoom ou passe o rato.")
-    else: st.warning("Não foi possível gerar a Bússola Política.")
-    st.write("---")
+    else:
+        st.warning("Não foi possível gerar a Bússola Política.")
+        st.write("---")
 
     # --- 3. Expandable Party Information Section ---
     st.subheader("Descobre mais sobre os Partidos")
@@ -442,9 +572,12 @@ def show_results():
             st.markdown(f"**Descrição:** {details.get('descricao', 'N/D')}")
             st.markdown(f"**Links:** - [Site Oficial]({official_url})")
             programa_url = details.get('programa_url', '#')
-            if programa_url.startswith("URL_") or programa_url == '#': programa_text = f"[Programa (Ver site)]({official_url})"
-            elif programa_url: programa_text = f"[Programa]({programa_url})"
-            else: programa_text = "Programa (Link N/D)"
+            if programa_url.startswith("URL_") or programa_url == '#':
+                programa_text = f"[Programa (Ver site)]({official_url})"
+            elif programa_url:
+                programa_text = f"[Programa]({programa_url})"
+            else:
+                programa_text = "Programa (Link N/D)"
             st.markdown(f"- {programa_text} - [Wikipedia]({details.get('wiki_url', '#')})")
 
     # --- 4. Share Results Section (Moved to End, No Insta/TikTok) ---
@@ -479,7 +612,10 @@ def show_results():
     # --- Footer / Restart Button ---
     st.write("---")
     if st.button("Reiniciar Teste"):
-        st.session_state.mode = 'intro'; st.session_state.idx = -1; st.session_state.answers = {}; st.rerun()
+        st.session_state.mode = 'intro'
+        st.session_state.idx = -1
+        st.session_state.answers = {}
+        st.rerun()
 
 # -------------------------------------------------------------------------
 # Main Application Flow (Using Mode State)
@@ -487,17 +623,22 @@ def show_results():
 # (Main flow logic remains the same)
 current_mode = st.session_state.get('mode', 'intro')
 
-if current_mode == 'intro':
-    show_intro()
-elif current_mode == 'short':
-    # Use length of actual short list for total
-    show_question(st.session_state.idx, short_questions_list, len(short_questions_list))
-elif current_mode == 'full':
-     total_q_display = len(questions)
-     show_question(st.session_state.idx, questions, total_q_display)
-elif current_mode == 'midpoint':
-    show_midpoint_choice()
-elif current_mode == 'results':
-    show_results()
-else: # Fallback
-    st.error("Erro: Estado inválido. A reiniciar."); st.session_state.mode = 'intro'; st.session_state.idx = -1; st.session_state.answers = {}; st.rerun()
+match current_mode:
+    case 'intro':
+        show_intro()
+    case 'short':
+        # Use length of actual short list for total
+        show_question(st.session_state.idx, short_questions_list, len(short_questions_list))
+    case 'full':
+        total_q_display = len(questions)
+        show_question(st.session_state.idx, questions, total_q_display)
+    case 'midpoint':
+        show_midpoint_choice()
+    case 'results':
+        show_results()
+    case _: # Fallback
+        st.error("Erro: Estado inválido. A reiniciar.")
+        st.session_state.mode = 'intro'
+        st.session_state.idx = -1
+        st.session_state.answers = {}
+        st.rerun()
