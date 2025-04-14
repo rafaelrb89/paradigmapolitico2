@@ -353,14 +353,17 @@ def show_intro():
     st.write(
         f"""
         Bem-vindo! Este teste visa **avaliar o seu posicionamento político**. O teste compara também o seu posicionamento em relação aos partidos portugueses que tiveram mais do que 7000 votos nas eleições legislativas de 2024 (mínimo de assinaturas para a formação de um partido político em Portugal).
+        
         Em cada pergunta, o utilizador será confrontado com uma afirmação e será pedido para escolher qual o nível de concordância. As perguntas visam avaliar a posição relativamente a valores políticos abstractos e intemporais, não a questões especificas da realidade portuguesa num determinado ponto no tempo.
+        
         O teste completo é composto por **60 perguntas** (20 perguntas por eixo). A descrição de cada um destes eixos é a seguinte:
         
-        **Eixo Económico**: Mede o grau de intervenção geral do Estado na Economia. Espectro Esquerda-Direita.
-        **Eixo Social**: Mede o grau de abertura a mudanças sociais. Espectro Conservador-Progressista.
-        **Eixo Político**: Mede o grau de liberalismo político. Espectro Autoritário-Liberal.
+        - **Eixo Económico**: Mede o grau de intervenção geral do Estado na Economia. Espectro Esquerda-Direita.
+        - **Eixo Social**: Mede o grau de abertura a mudanças sociais. Espectro Conservador-Progressista.
+        - **Eixo Político**: Mede o grau de liberalismo político. Espectro Autoritário-Liberal.
         
         Os resultados do teste mostram o posicionamento relativamente aos vários partidos políticos portugueses nos 3 eixos através de um mapa com 3 dimensões.
+        
         Os resultados mostram também o grau de semelhança das resposta do utilzador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste.
         
         Pode optar por fazer um teste **curto de {short_q_count} perguntas** (resultados mais rápidos mas menos precisos) ou o teste **completo de {len(questions)} perguntas** (resultados mais fiáveis).
