@@ -21,26 +21,14 @@ APP_URL = "https://YOUR_APP_DEPLOYED_URL_HERE" # IMPORTANT: Replace this!
 # Custom Color Map for Affinity Chart
 # -------------------------------------------------------------------------
 party_color_map = {
-    "AD": "orange",
-    "ADN": "darkgrey",
-    "BE": "#FFC0CB",
-    "CDU": "#EE0000",
-    "Chega": "blue",
-    "IL": "cyan",
-    "JPP": "#7FFFD4",
-    "Livre": "#7FFF00",
-    "Nova Direita": "lightskyblue",
-    "PAN": "forestgreen",
-    "PCTP/MRPP": "#8B2323",
-    "PS": "#FF1493",
-    "RIR": "yellow",
-    "Volt": "purple",
+    "PS": "#FF1493", "AD": "orange", "Livre": "#7FFF00", "PAN": "forestgreen",
+    "IL": "cyan", "BE": "#FFC0CB", "CDU": "#EE0000", "Chega": "blue",
+    "RIR": "yellow", "JPP": "#7FFFD4", "ADN": "darkgrey", "PCTP/MRPP": "#8B2323",
+    "Nova Direita": "lightskyblue", "Volt": "purple",
 }
-
 # -------------------------------------------------------------------------
-# CSS Styling
+# CSS Styling (Final Attempt: Type Primary + Specific Selector + Target Colors)
 # -------------------------------------------------------------------------
-# (CSS remains the same as your provided code)
 st.markdown(
     """
     <style>
@@ -49,6 +37,7 @@ st.markdown(
     .stApp { background-color: #0E1117 !important; }
     h1, h2, h3, h4, h5, h6, p, div, span, label, input, textarea, li { color: #FFFFFF !important; }
     a { color: #1E90FF !important; }
+
     /* --- Altair Chart Visibility --- */
     .vega-visualization { background-color: transparent !important; }
     .vega-visualization svg text { fill: #FFFFFF !important; font-size: 11px; }
@@ -58,47 +47,68 @@ st.markdown(
     .vega-visualization svg .axis path, .vega-visualization svg .axis line, .vega-visualization svg .axis .tick { stroke: #CCCCCC !important; }
     .vega-visualization svg .axis .domain { stroke-width: 1px; }
     .compass-text-label { fill: #FFFFFF !important; }
+
     /* --- Button Styling --- */
+    /* Answer Buttons (Horizontal) */
     div[data-testid="stHorizontalBlock"] button { width: 100%; color: #ffffff !important; border-radius: 4px; border: none;}
     div[data-testid="stHorizontalBlock"] > div:nth-of-type(1) button { background-color: #8B0000 !important; }
     div[data-testid="stHorizontalBlock"] > div:nth-of-type(2) button { background-color: #FF6347 !important; }
     div[data-testid="stHorizontalBlock"] > div:nth-of-type(3) button { background-color: #FFD700 !important; color: #000000 !important;}
     div[data-testid="stHorizontalBlock"] > div:nth-of-type(4) button { background-color: #556B2F !important; }
     div[data-testid="stHorizontalBlock"] > div:nth-of-type(5) button { background-color: #006400 !important; }
-    /* Skip Button Styling (Using Wrapper Class) */
+
+    /* **MODIFIED**: Skip Button Styling (Specific Selector + Target Colors) */
     .skip-btn-wrapper { margin-top: 15px !important; margin-bottom: 5px !important; }
-    .skip-btn-wrapper button { 
-    background-color: #555555 !important; 
-    color: #ffffff !important; 
-    width: 100% !important; 
-    padding: 0.5em 1em !important; 
-    font-weight: bold; 
-    border: none !important; 
-    border-radius: 4px; 
-}
-    /* Back Button Styling (Using Wrapper Class) */
+    .skip-btn-wrapper div[data-testid="stButton"] button {
+        background-color: #D3D3D3 !important; /* Light Gray */
+        color: #000000 !important; /* Black Text */
+        width: 100% !important;
+        padding: 0.5em 1em !important;
+        font-weight: bold;
+        border: none !important;
+        border-radius: 4px;
+    }
+    /* Force color on potential inner elements too */
+    .skip-btn-wrapper button * {
+         color: #000000 !important;
+    }
+
+
+    /* **MODIFIED**: Back Button Styling (Specific Selector + Target Colors) */
     .recuar-btn-wrapper { margin-top: 10px !important; margin-bottom: 10px !important; }
-    .recuar-btn-wrapper div[data-testid="stButton"] button { 
-    background-color: #777777 !important; 
-    color: #ffffff !important; 
-    width: 100% !important; 
-    padding: 0.5em 1em !important; 
-    font-weight: bold; 
-    border: none !important; 
-    border-radius: 4px; 
-}
-    /* Start/Midpoint Button Styling */
+    .recuar-btn-wrapper div[data-testid="stButton"] button {
+        background-color: #D3D3D3 !important; /* Light Gray */
+        color: #000000 !important; /* Black Text */
+        width: 100% !important;
+        padding: 0.5em 1em !important;
+        font-weight: bold;
+        border: none !important;
+        border-radius: 4px;
+    }
+     /* Force color on potential inner elements too */
+    .recuar-btn-wrapper button * {
+         color: #000000 !important;
+    }
+
+    /* **NEW**: Restart Button Wrapper (for spacing) */
+    .restart-btn-wrapper {
+        margin-top: 20px !important; /* Add space above the restart button */
+        margin-bottom: 10px !important; /* Optional: Add space below */
+    }
+    /* No specific style needed for the button itself - use theme default */
+
+
+    /* (Rest of CSS: Start/Midpoint/Share/Expander styles remain the same) */
+    /* ... */
     .start-btn button, .midpoint-btn button { font-weight: bold !important; padding: 0.6em 1em !important; width: 100%; border-radius: 5px; border: none;}
     .start-btn button { background-color: #003300 !important; color: #ffffff !important; font-size: 1.1rem !important; }
     .midpoint-btn button { background-color: #003366 !important; color: #ffffff !important; font-size: 1.0rem !important; margin-top: 10px;}
     .start-btn-container { display: flex; justify-content: center; margin-top: 20px; gap: 20px;}
-    /* Share Buttons */
     .share-btn { display: inline-block; padding: 8px 15px; margin: 5px 3px; border-radius: 5px; color: white !important; text-decoration: none; font-weight: bold; text-align: center; border: none; cursor: pointer; }
     .share-btn:hover { opacity: 0.9; text-decoration: none; color: white !important; }
     .share-btn-facebook { background-color: #1877F2; } .share-btn-x { background-color: #1DA1F2; }
     .share-btn-whatsapp { background-color: #25D366; } .share-btn-email { background-color: #777777; }
     .share-button-container { text-align: center; margin-top: 20px;}
-    /* Expander Styling */
     .stExpander div[data-testid="stExpanderDetails"] { background-color: #222222; padding: 15px; border-radius: 5px; border: 1px solid #444444; }
     .stExpander div[data-testid="stExpanderDetails"] p, .stExpander div[data-testid="stExpanderDetails"] li, .stExpander div[data-testid="stExpanderDetails"] strong { color: #FFFFFF !important; }
     .stExpander div[data-testid="stExpanderDetails"] a { color: #90CAF9 !important; }
@@ -122,45 +132,32 @@ try:
     party_answers_df = pd.read_csv(CSV_FILE)
     required_cols = ["Pergunta", "Multiplicador", "Curto"]
     missing_req_cols = [col for col in required_cols if col not in party_answers_df.columns]
-    if missing_req_cols:
-        st.error(f"Erro: Coluna(s) necessária(s) não encontrada(s): {', '.join(missing_req_cols)}")
-        st.stop()
+    if missing_req_cols: st.error(f"Erro: Coluna(s) necessária(s) não encontrada(s): {', '.join(missing_req_cols)}"); st.stop()
 
     party_answers_df.set_index("Pergunta", inplace=True)
     multipliers = party_answers_df['Multiplicador']
     is_short_question_col = party_answers_df['Curto']
 
-    if not multipliers.isin([1, -1]).all():
-        st.warning("Atenção: 'Multiplicador' contém valores inválidos.")
+    if not multipliers.isin([1, -1]).all(): st.warning("Atenção: 'Multiplicador' contém valores inválidos.")
 
     try:
         short_questions_indices = pd.to_numeric(is_short_question_col, errors='coerce') == 1
         short_questions_list = party_answers_df[short_questions_indices].index.tolist()
         # Allow flexibility, just check if list is non-empty
         can_run_short_test = bool(short_questions_list)
-        if len(short_questions_list) != SHORT_TEST_SIZE and can_run_short_test :
-            st.warning(f"Atenção: Encontradas {len(short_questions_list)} perguntas curtas, esperado {SHORT_TEST_SIZE}.")
-        if not can_run_short_test:
-            st.error("Erro: Nenhuma pergunta para teste curto (coluna 'Curto').")
-    except Exception as e:
-        st.error(f"Erro ao processar coluna 'Curto': {e}")
-        short_questions_list = []
-        can_run_short_test = False
+        if len(short_questions_list) != SHORT_TEST_SIZE and can_run_short_test : st.warning(f"Atenção: Encontradas {len(short_questions_list)} perguntas curtas, esperado {SHORT_TEST_SIZE}.")
+        if not can_run_short_test: st.error("Erro: Nenhuma pergunta para teste curto (coluna 'Curto').")
+    except Exception as e: st.error(f"Erro ao processar coluna 'Curto': {e}"); short_questions_list = []; can_run_short_test = False
 
     party_answers = party_answers_df.drop(columns=['Multiplicador', 'Curto'], errors='ignore')
 
-except FileNotFoundError:
-    st.error(f"Erro: Ficheiro '{CSV_FILE}' não encontrado.")
-    st.stop()
-except Exception as e:
-    st.error(f"Erro ao ler ou processar CSV: {e}")
-    st.stop()
+except FileNotFoundError: st.error(f"Erro: Ficheiro '{CSV_FILE}' não encontrado."); st.stop()
+except Exception as e: st.error(f"Erro ao ler ou processar CSV: {e}"); st.stop()
 
 questions = list(party_answers.index)
 TOTAL_QUESTIONS_IN_FILE = len(questions)
 
-if TOTAL_QUESTIONS_IN_FILE < EXPECTED_TOTAL_QUESTIONS:
-    st.warning(f"Atenção: Ficheiro tem {TOTAL_QUESTIONS_IN_FILE} perguntas, esperado {EXPECTED_TOTAL_QUESTIONS}.")
+if TOTAL_QUESTIONS_IN_FILE < EXPECTED_TOTAL_QUESTIONS: st.warning(f"Atenção: Ficheiro tem {TOTAL_QUESTIONS_IN_FILE} perguntas, esperado {EXPECTED_TOTAL_QUESTIONS}.")
 
 # Define parties and URLs
 defined_parties = {
@@ -173,18 +170,15 @@ defined_parties = {
 valid_parties_in_csv = [p for p in defined_parties if p in party_answers.columns]
 missing_parties = [p for p in defined_parties if p not in party_answers.columns]
 
-if missing_parties:
-    st.warning(f"Partidos definidos mas não encontrados no CSV: {', '.join(missing_parties)}")
-if not valid_parties_in_csv:
-    st.error("Erro: Nenhum partido definido encontrado no CSV.")
-    st.stop()
+if missing_parties: st.warning(f"Partidos definidos mas não encontrados no CSV: {', '.join(missing_parties)}")
+if not valid_parties_in_csv: st.error("Erro: Nenhum partido definido encontrado no CSV."); st.stop()
 
 party_answers = party_answers[valid_parties_in_csv]
 political_parties = {p: url for p, url in defined_parties.items() if p in valid_parties_in_csv}
 party_color_map = {p: color for p, color in party_color_map.items() if p in valid_parties_in_csv}
 
-# **MODIFIED**: Expanded dictionary with detailed party information based on general knowledge and limited search
-# up to April 2025. Subject to change/interpretation.
+# **MODIFIED**: Expanded dictionary with detailed party information
+# Information based on general knowledge and limited search up to April 2025. Subject to change/interpretation.
 party_details = {
     "PS": {
         "partido": "Partido Socialista",
@@ -207,7 +201,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/AD_%E2%80%94_ALIAN%C3%87A_DEMOCR%C3%81TICA_(2024-Presente)"
     },
     "Livre": {
-        "partido": "Livre",
+        "partido": "Livre",        
         "lider": "Rui Tavares, Isabel Mendes Lopes (Porta-vozes)", "fundacao": "2014",
         "espectro": "Esquerda",
         "ideologias": "Socialismo, Progressismo, Ecologia, Europeísmo, Direitos das Minorias",
@@ -217,7 +211,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/Livre_(partido_pol%C3%ADtico)"
     },
     "PAN": {
-        "partido": "Pessoas-Animais-Natureza",
+        "partido": "Pessoas-Animais-Natureza",   
         "lider": "Inês Sousa Real (Porta-Voz)", "fundacao": "2011",
         "espectro": "Centro-esquerda",
         "ideologias": "Ambientalismo, Direitos dos Animais, Humanismo",
@@ -257,7 +251,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/Coliga%C3%A7%C3%A3o_Democr%C3%A1tica_Unit%C3%A1ria"
     },
     "Chega": {
-        "partido": "Chega",
+        "partido": "Chega",        
         "lider": "André Ventura (Presidente)", "fundacao": "2019",
         "espectro": "Extrema-direita",
         "ideologias": " Conservadorismo cristão, Nacionalismo, Anti-imigração, Anti-corrupção",
@@ -267,7 +261,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/Chega_(partido_pol%C3%ADtico)"
     },
      "RIR": {
-        "partido": "Reagir-Incluir-Reciclar",
+        "partido": "Reagir-Incluir-Reciclar", 
         "lider": "Márcia Henriques (Presidente)", "fundacao": "2019",
         "espectro": "Centro",
         "ideologias": "Centrismo, Humanismo, Reformismo, Descentralização, Ecologia",
@@ -277,7 +271,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/Reagir_Incluir_Reciclar"
     },
     "JPP": {
-        "partido": "Juntos Pelo Povo",
+        "partido": "Juntos Pelo Povo",  
         "lider": "Lina Pereira (Presidente), Élvio Sousa (Secretário Geral)", "fundacao": "2015",
         "espectro": "Centro (Regionalista)",
         "ideologias": "Regionalismo (Madeira), Social-democracia (local), Liberalismo, Autonomismo",
@@ -287,7 +281,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/Juntos_pelo_Povo"
     },
     "ADN": {
-        "partido": "Alternativa Democrática Nacional",
+        "partido": "Alternativa Democrática Nacional",  
         "lider": "Bruno Fialho (Presidente)", "fundacao": "2015 (como PDR), 2021 (ADN)",
         "espectro": "Extrema-direita",
         "ideologias": "Conservadorismo, Nacionalismo, Anti-globalismo, Anti-establishment",
@@ -297,7 +291,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/Alternativa_Democr%C3%A1tica_Nacional"
     },
     "PCTP/MRPP": {
-        "partido": "Partido Comunista dos Trabalhadores Portugueses",
+        "partido": "Partido Comunista dos Trabalhadores Portugueses",  
         "lider": "Liderança coletiva", "fundacao": "1970 (MRPP), 1976 (PCTP/MRPP)",
         "espectro": "Extrema-esquerda",
         "ideologias": "Comunismo, Marxismo-Leninismo, Maoismo",
@@ -307,7 +301,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/Partido_Comunista_dos_Trabalhadores_Portugueses"
     },
     "Nova Direita": {
-        "partido": "Nova Direita",
+        "partido": "Nova Direita",  
         "lider": "Ossanda Liber (Presidente)", "fundacao": "2023",
         "espectro": "Direita",
         "ideologias": "Conservadorismo cristão, Anti-imigração, Liberalismo económico, Nacionalismo",
@@ -317,7 +311,7 @@ party_details = {
         "wiki_url": "https://pt.wikipedia.org/wiki/Nova_Direita_(Portugal)"
     },
     "Volt": {
-        "partido": "Volt Portugal",
+        "partido": "Volt Portugal",  
         "lider": "Duarte Costa, Inês Bravo Figueiredo (Co-Presidentes)", "fundacao": "2020",
         "espectro": "Centro",
         "ideologias": "Liberalismo Social, Progressismo, Federalismo Europeu, Ecologia",
@@ -331,12 +325,9 @@ party_details = {
 party_details = {p: details for p, details in party_details.items() if p in valid_parties_in_csv}
 
 
-if 'mode' not in st.session_state:
-    st.session_state.mode = 'intro'
-if 'idx' not in st.session_state:
-    st.session_state.idx = -1
-if 'answers' not in st.session_state:
-    st.session_state.answers = {}
+if 'mode' not in st.session_state: st.session_state.mode = 'intro'
+if 'idx' not in st.session_state: st.session_state.idx = -1
+if 'answers' not in st.session_state: st.session_state.answers = {}
 
 # -------------------------------------------------------------------------
 # Helper Functions
@@ -345,40 +336,24 @@ if 'answers' not in st.session_state:
 # (show_intro, show_question, show_midpoint_choice, calculate_compass_scores unchanged)
 def show_intro():
     """Shows the intro page with test length choice."""
-    st.title("Paradigma Político")
-
+    st.title("Votímetro")
+    st.write("Bem-vindo! Este teste visa **avaliar o seu posicionamento político**. O teste compara também o seu posicionamento em relação aos partidos portugueses.")
+    st.write("Em cada questão, utilizador será confrontado com uma afirmação e será pedido para escolher qual o nível de concordância. O teste completo é composto por **60 perguntas**.")
+    st.write("")
+    st.write("Os resultados do teste mostram o posicionamento relativamente aos vários partidos políticos portugueses nos 3 eixos através de um mapa com 3 dimensões.")
+    st.write("Os resultados mostram também o grau de semelhança das resposta do utilzador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste.")
+    st.write("")
     # Use len(short_questions_list) if available, else SHORT_TEST_SIZE as fallback text
     short_q_count = len(short_questions_list) if can_run_short_test else SHORT_TEST_SIZE
-
-    st.write(
-        f"""
-        Bem-vindo! Este teste visa **avaliar o seu posicionamento político**. O teste compara também o seu posicionamento em relação aos partidos portugueses que tiveram mais do que 7000 votos nas eleições legislativas de 2024 (mínimo de assinaturas para a formação de um partido político em Portugal).
-        
-        Em cada pergunta, o utilizador será confrontado com uma afirmação e será pedido para escolher qual o nível de concordância. As perguntas visam avaliar a posição relativamente a valores políticos abstractos e intemporais, não a questões especificas da realidade portuguesa num determinado ponto no tempo.
-        
-        O teste completo é composto por **60 perguntas** (20 perguntas por eixo). A descrição de cada um destes eixos é a seguinte:
-        
-        - **Eixo Económico**: Mede o grau de intervenção geral do Estado na Economia. Espectro Esquerda-Direita.
-        - **Eixo Social**: Mede o grau de abertura a mudanças sociais. Espectro Conservador-Progressista.
-        - **Eixo Político**: Mede o grau de liberalismo político. Espectro Autoritário-Liberal.
-        
-        Os resultados do teste mostram o posicionamento relativamente aos vários partidos políticos portugueses nos 3 eixos através de um mapa com 3 dimensões.
-        
-        Os resultados mostram também o grau de semelhança das resposta do utilzador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste.
-        
-        Pode optar por fazer um teste **curto de {short_q_count} perguntas** (resultados mais rápidos mas menos precisos) ou o teste **completo de {len(questions)} perguntas** (resultados mais fiáveis).
-        ---
-        """
-    )
-
+    st.write(f"Pode optar por fazer um teste **curto de {short_q_count} perguntas** (resultados mais rápidos mas menos precisos) ou o teste **completo de {len(questions)} perguntas** (resultados mais fiáveis).")
+    st.write("---")
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("<div class='start-btn'>", unsafe_allow_html=True)
         if st.button(f"Iniciar Teste Curto ({short_q_count} Perguntas)", key="start_short", disabled=not can_run_short_test):
             st.session_state.mode = 'short'; st.session_state.idx = 0; st.session_state.answers = {}; st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-        if not can_run_short_test:
-            st.caption("Opção indisponível.")
+        if not can_run_short_test: st.caption("Opção indisponível.")
     with col2:
         st.markdown("<div class='start-btn'>", unsafe_allow_html=True)
         if st.button(f"Iniciar Teste Completo ({len(questions)} Perguntas)", key="start_full"):
@@ -386,16 +361,18 @@ def show_intro():
         st.markdown("</div>", unsafe_allow_html=True)
     st.write("---")
     st.markdown("**Partidos incluídos:** " + " | ".join([f"[{p}]({url})" for p, url in political_parties.items()]))
+    st.write("Esta lista inclui os partidos que tiveram mais do que 7000 votos nas eleições legislativas de 2024 (mínimo de assinaturas para a formação de um partido político em Portugal). ")   
+    st.write("As afirmações que compõem o teste visam avaliar a posição relativamente a valores políticos abstractos e intemporais, não a questões especificas da realidade portuguesa num determinado ponto no tempo. As afirmações cobrem 3 eixos. A descrição de cada um destes eixos é a seguinte:")
+    st.write("")
+    st.write("**Eixo Económico**: Mede o grau de intervenção geral do Estado na Economia. Espectro Esquerda-Direita.")
+    st.write("**Eixo Social**: Mede o grau de abertura a mudanças sociais. Espectro Conservador-Progressista.")
+    st.write("**Eixo Político**: Mede o grau de liberalismo político a nível de política interna e externa. Espectro Autoritário/Nacionalista-Liberal/Globalista")    
+    st.write("")
     st.write("As respostas dos partidos são baseadas na avaliação da equipa que elaborou o teste tendo em conta os conteúdos dos mais recententes programas, posições públicas passadas, e a ideologia de cada partido. A equipa encontra-se disponível para ajustar as respostas de cada partido, caso os partidos entrem em contacto.")
 
 def show_question(current_idx, question_list, total_questions_in_mode):
     """Shows the current question, answer buttons, skip, and back buttons."""
-    if not (0 <= current_idx < len(question_list)):
-        st.error("Erro interno: Índice de pergunta inválido.")
-        st.session_state.mode = 'intro'
-        st.session_state.idx = -1
-        st.rerun()
-        return
+    if not (0 <= current_idx < len(question_list)): st.error("Erro interno: Índice de pergunta inválido."); st.session_state.mode = 'intro'; st.session_state.idx = -1; st.rerun(); return
     question_text = question_list[current_idx]
     st.header(f"Pergunta {current_idx + 1} de {total_questions_in_mode}")
     st.subheader(question_text)
@@ -408,28 +385,27 @@ def show_question(current_idx, question_list, total_questions_in_mode):
         with cols[i]:
             if st.button(label, key=f"q{current_idx}_opt_{i}"):
                 st.session_state.answers[question_text] = value; st.session_state.idx = next_idx; button_pressed_type = 'answer'; break
+
     button_below_container = st.container()
     with button_below_container:
         st.markdown("<div class='skip-btn-wrapper'>", unsafe_allow_html=True)
-        if st.button("Sem opinião", key=f"q{current_idx}_skip", use_container_width=True):
+        # **MODIFIED**: Added type="primary"
+        if st.button("Sem opinião", key=f"q{current_idx}_skip", use_container_width=True, type="tertiary"):
             st.session_state.answers.pop(question_text, None); st.session_state.idx = next_idx; button_pressed_type = 'skip'
         st.markdown("</div>", unsafe_allow_html=True)
+
         if current_idx > 0:
             st.markdown("<div class='recuar-btn-wrapper'>", unsafe_allow_html=True)
-            if st.button("Recuar", key=f"q{current_idx}_back", use_container_width=True):
+            # **MODIFIED**: Added type="primary"
+            if st.button("Recuar", key=f"q{current_idx}_back", use_container_width=True, type="tertiary"):
                 st.session_state.idx -= 1; button_pressed_type = 'back'
             st.markdown("</div>", unsafe_allow_html=True)
+
     if button_pressed_type in ['answer', 'skip']:
-        if st.session_state.mode == 'short' and st.session_state.idx == len(short_questions_list):
-            st.session_state.mode = 'midpoint'
-            st.rerun()
-        elif st.session_state.mode == 'full' and st.session_state.idx == len(questions):
-            st.session_state.mode = 'results'
-            st.rerun()
-        elif st.session_state.mode not in ['midpoint', 'results']:
-            st.rerun()
-    elif button_pressed_type == 'back':
-        st.rerun()
+        if st.session_state.mode == 'short' and st.session_state.idx == len(short_questions_list): st.session_state.mode = 'midpoint'; st.rerun()
+        elif st.session_state.mode == 'full' and st.session_state.idx == len(questions): st.session_state.mode = 'results'; st.rerun()
+        elif st.session_state.mode not in ['midpoint', 'results']: st.rerun()
+    elif button_pressed_type == 'back': st.rerun()
 
 def show_midpoint_choice():
     """Displays screen after short test, asking user to continue or see results."""
@@ -439,15 +415,11 @@ def show_midpoint_choice():
     col1, col2 = st.columns(2)
     with col1:
          st.markdown("<div class='midpoint-btn'>", unsafe_allow_html=True)
-         if st.button(f"Ver Resultados ({len(short_questions_list)} Perguntas)", key="results_short"):
-             st.session_state.mode = 'results'
-             st.rerun()
+         if st.button(f"Ver Resultados ({len(short_questions_list)} Perguntas)", key="results_short"): st.session_state.mode = 'results'; st.rerun()
          st.markdown("</div>", unsafe_allow_html=True)
     with col2:
          st.markdown("<div class='midpoint-btn'>", unsafe_allow_html=True)
-         if st.button(f"Continuar Teste ({len(questions)} Perguntas)", key="continue_full"):
-             st.session_state.mode = 'full'
-             st.rerun()
+         if st.button(f"Continuar Teste ({len(questions)} Perguntas)", key="continue_full"): st.session_state.mode = 'full'; st.rerun()
          st.markdown("</div>", unsafe_allow_html=True)
 
 def calculate_compass_scores(entity_answers, all_questions_list, question_multipliers):
@@ -481,21 +453,14 @@ def show_results():
 
     if not perguntas_respondidas_list:
         st.warning("Não respondeu a nenhuma pergunta.")
-        if st.button("Reiniciar Teste"):
-            st.session_state.mode = 'intro'
-            st.session_state.idx = -1
-            st.session_state.answers = {}
-            st.rerun()
+        if st.button("Reiniciar Teste"): st.session_state.mode = 'intro'; st.session_state.idx = -1; st.session_state.answers = {}; st.rerun()
         return
 
     is_short_result = can_run_short_test and (num_perguntas_respondidas == len(short_questions_list)) and (len(short_questions_list) < len(questions))
     is_full_result = (num_perguntas_respondidas == len(questions))
-    if is_short_result :
-        st.info(f"Resultados baseados no teste curto de {num_perguntas_respondidas} perguntas.")
-    elif is_full_result:
-        st.info(f"Resultados baseados no teste completo de {num_perguntas_respondidas} perguntas.")
-    else:
-        st.info(f"Resultados baseados em {num_perguntas_respondidas} perguntas respondidas.")
+    if is_short_result : st.info(f"Resultados baseados no teste curto de {num_perguntas_respondidas} perguntas.")
+    elif is_full_result: st.info(f"Resultados baseados no teste completo de {num_perguntas_respondidas} perguntas.")
+    else: st.info(f"Resultados baseados em {num_perguntas_respondidas} perguntas respondidas.")
 
     # --- 1. Affinity Score Calculation & Chart ---
     st.header("Percentagem de Concordância com os Partidos Portugueses")
@@ -522,7 +487,7 @@ def show_results():
      ).properties(background='transparent')
     st.altair_chart(affinity_chart, use_container_width=True)
     st.write("O gráfico acima mostra a concordância geral com base em todas as suas respostas. Quanto mais distante a resposta do utilizador da resposta de um determinado partido, menor o grau de semelhança. Um resultado de 100% indica uma concordância total com um determinado partido em todas as perguntas.")
-    st.caption("Os resultados devem ser interpretados tendo em consideração as limitações do teste. O teste dá o mesmo peso a todas as afirmações, o que normalmente não reflete as preferências dos eleitores. Assim, é útil considerar não apenas o partido com maior percentagem de semelhança, mas também os partidos com percentagens próximas, já que podem ter maior concordância em temas mais relevantes para o utilizador. ")
+    st.caption("Os resultados devem ser interpretados tendo em consideração as limitações do teste. O teste dá o mesmo peso a todas as afirmações, o que normalmente não reflete as preferências dos eleitores. Assim, é útil considerar não apenas o partido com maior percentagem de semelhança, mas também os partidos com percentagens próximas, já que podem ter maior concordância em temas mais relevantes para o utilizador. ")    
     st.write("---")
 
     # --- 2. Political Compass Calculation & Chart ---
@@ -551,7 +516,7 @@ def show_results():
         points = base.mark_point(size=120, filled=True, opacity=0.9).encode(
             color=alt.Color('Eixo Político', scale=color_scale, legend=alt.Legend(title="Eixo Político", orient="top", titleOrient="left", gradientLength=200, format=".1f")),
             tooltip=['Entidade', alt.Tooltip('Eixo Económico', format='.2f'), alt.Tooltip('Eixo Social', format='.2f'), alt.Tooltip('Eixo Político', format='.2f', title="Político (Aut/Lib)")],
-            shape=alt.condition(alt.datum.Entidade == 'Você', alt.value('diamond'), alt.value('circle'))
+            shape=alt.condition(alt.datum.Entidade == 'Você', alt.value('triangle'), alt.value('circle'))
         )
         text = base.mark_text(align='left', baseline='middle', dx=9, fontSize=12, fontWeight='bold').encode(text='Entidade', color=alt.value('#FFFFFF'))
         compass_chart = (vline + hline + points + text).properties(background='transparent').interactive()
@@ -560,14 +525,13 @@ def show_results():
             **Como interpretar a Bússola Política:**
             * **Posição Horizontal (Eixo X):** Eixo **Económico**. Esquerda (-1) vs Direita (+1).
             * **Posição Vertical (Eixo Y):** Eixo **Social**. Conservador (-1) vs Progressista (+1).
-            * **Côr:** Eixo **Político**. Vermelho (Autoritário, -1) -> Cinzento (Neutro, 0) -> Amarelo (Liberal, +1).
+            * **Côr:** Eixo **Político**. Vermelho (Autoritário/Nacionalista, -1) -> Cinzento (Neutro, 0) -> Amarelo (Liberal/Globalista, +1).
 
-            A sua posição ("Você") é marcada com um losango (♦). As posições são calculadas com base nas respostas.
+            A sua posição ("Você") é marcada com um triângulo (▲). As posições são calculadas com base nas suas respostas.
             """ # Updated explanation for marker and overlap acknowledgement
         )
         st.caption("Nota: Se as etiquetas se sobrepuserem, use o zoom ou passe o rato.")
-    else:
-        st.warning("Não foi possível gerar a Bússola Política.")
+    else: st.warning("Não foi possível gerar a Bússola Política.")
     st.write("---")
 
 
@@ -583,7 +547,7 @@ def show_results():
             official_url = political_parties.get(party_name, "#")
 
             # Display new fields + existing fields
-            st.markdown(f"**Partido/Coligação:** {details.get('partido', 'N/D')}")
+            st.markdown(f"**Partido/Coligação:** {details.get('partido', 'N/D')}")            
             st.markdown(f"**Líder(es) (ref. Abril 2025):** {details.get('lider', 'N/D')}")
             st.markdown(f"**Fundação:** {details.get('fundacao', 'N/D')}")
             st.markdown(f"**Espectro Político:** {details.get('espectro', 'N/D')}")
@@ -627,10 +591,14 @@ def show_results():
     st.markdown(f'<a href="{email_url}" target="_blank" class="share-btn share-btn-email">Email</a>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
+
     # --- Footer / Restart Button ---
     st.write("---")
-    if st.button("Reiniciar Teste"):
+    # **MODIFIED**: Added wrapper and use_container_width=True
+    st.markdown("<div class='restart-btn-wrapper'>", unsafe_allow_html=True)
+    if st.button("Reiniciar Teste", use_container_width=True, key="restart_test_results", type="tertiary"): # Added key for clarity
         st.session_state.mode = 'intro'; st.session_state.idx = -1; st.session_state.answers = {}; st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------------
 # Main Application Flow (Using Mode State)
@@ -638,17 +606,16 @@ def show_results():
 # (Main flow logic remains the same)
 current_mode = st.session_state.get('mode', 'intro')
 
-match current_mode:
-    case 'intro':
-        show_intro()
-    case 'short':
-        show_question(st.session_state.idx, short_questions_list, len(short_questions_list))
-    case 'full':
-        total_q_display = len(questions)
-        show_question(st.session_state.idx, questions, total_q_display)
-    case 'midpoint':
-        show_midpoint_choice()
-    case 'results':
-        show_results()
-    case _:
-        st.error("Erro: Estado inválido. A reiniciar."); st.session_state.mode = 'intro'; st.session_state.idx = -1; st.session_state.answers = {}; st.rerun()
+if current_mode == 'intro':
+    show_intro()
+elif current_mode == 'short':
+    show_question(st.session_state.idx, short_questions_list, len(short_questions_list))
+elif current_mode == 'full':
+     total_q_display = len(questions)
+     show_question(st.session_state.idx, questions, total_q_display)
+elif current_mode == 'midpoint':
+    show_midpoint_choice()
+elif current_mode == 'results':
+    show_results()
+else: # Fallback
+    st.error("Erro: Estado inválido. A reiniciar."); st.session_state.mode = 'intro'; st.session_state.idx = -1; st.session_state.answers = {}; st.rerun()
