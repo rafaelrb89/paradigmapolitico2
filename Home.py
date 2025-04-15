@@ -337,11 +337,9 @@ if 'answers' not in st.session_state: st.session_state.answers = {}
 def show_intro():
     """Shows the intro page with test length choice."""
     st.title("Votímetro")
-    st.write("Bem-vindo! Este teste visa **avaliar o seu posicionamento político**. O teste compara também o seu posicionamento em relação aos partidos portugueses.")
-    st.write("Em cada questão, utilizador será confrontado com uma afirmação e será pedido para escolher qual o nível de concordância. O teste completo é composto por **60 perguntas**.")
+    st.write("Bem-vindo! Este teste visa **avaliar o seu posicionamento político**. O teste compara também o seu posicionamento em relação aos partidos portugueses. Em cada questão, utilizador será confrontado com uma afirmação e será pedido para escolher qual o nível de concordância. O teste completo é composto por **60 perguntas**.")
     st.write("")
-    st.write("Os resultados do teste mostram o posicionamento relativamente aos vários partidos políticos portugueses nos 3 eixos através de um mapa com 3 dimensões.")
-    st.write("Os resultados mostram também o grau de semelhança das resposta do utilzador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste.")
+    st.write("Os resultados do teste mostram o posicionamento relativamente aos vários partidos políticos portugueses nos 3 eixos através de um mapa com 3 dimensões. Os resultados mostram também o grau de semelhança das resposta do utilzador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste.")
     st.write("")
     # Use len(short_questions_list) if available, else SHORT_TEST_SIZE as fallback text
     short_q_count = len(short_questions_list) if can_run_short_test else SHORT_TEST_SIZE
