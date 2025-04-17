@@ -337,9 +337,9 @@ if 'answers' not in st.session_state: st.session_state.answers = {}
 def show_intro():
     """Shows the intro page with test length choice."""
     st.title("Votímetro")
-    st.write("Bem-vindo! Este teste visa **avaliar o seu posicionamento político**. O teste compara também o seu posicionamento em relação aos partidos portugueses. Em cada questão, utilizador será confrontado com uma afirmação e será pedido para escolher qual o nível de concordância. O teste completo é composto por **60 perguntas**.")
+    st.write("Bem-vindo! Este teste visa avaliar o seu posicionamento político e compará-lo com os partidos portugueses em 2025. O utilizador será confrontado com afirmações e será pedido para escolher qual o nível de concordância. ")
     st.write("")
-    st.write("Os resultados do teste mostram o posicionamento relativamente aos vários partidos políticos portugueses em 3 eixos através de um mapa com 3 dimensões. Os resultados mostram também o grau de semelhança das resposta do utilzador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste.")
+    st.write("Os resultados mostram o grau de semelhança das resposta do utilizador em relação a cada partido, medido pela soma dos desvios absolutos em todas as respostas do teste, bem como o posicionamento relativamente aos vários partidos políticos portugueses em 3 eixos.")
     st.write("")
     # Use len(short_questions_list) if available, else SHORT_TEST_SIZE as fallback text
     short_q_count = len(short_questions_list) if can_run_short_test else SHORT_TEST_SIZE
@@ -359,14 +359,14 @@ def show_intro():
         st.markdown("</div>", unsafe_allow_html=True)
     st.write("---")
     st.markdown("**Partidos incluídos:** " + " | ".join([f"[{p}]({url})" for p, url in political_parties.items()]))
-    st.write("Esta lista inclui os partidos que tiveram mais do que 7000 votos nas eleições legislativas de 2024 (mínimo de assinaturas para a formação de um partido político em Portugal). ")   
-    st.write("As afirmações que compõem o teste visam avaliar a posição relativamente a valores políticos abstractos e intemporais, não a questões especificas da realidade portuguesa num determinado ponto no tempo. As afirmações cobrem 3 eixos. A descrição de cada um destes eixos é a seguinte:")
-    st.write("")
-    st.write("**Eixo Económico**: Mede o grau de intervenção geral do Estado na Economia. Espectro Esquerda-Direita.")
-    st.write("**Eixo Social**: Mede o grau de abertura a mudanças sociais. Espectro Conservador-Progressista.")
-    st.write("**Eixo Político**: Mede o grau de liberalismo político a nível de política interna e externa. Espectro Autoritário/Nacionalista-Liberal/Globalista")    
-    st.write("")
-    st.write("As respostas dos partidos são baseadas na avaliação da equipa que elaborou o teste tendo em conta os conteúdos dos mais recententes programas, posições públicas passadas, e a ideologia de cada partido. A equipa encontra-se disponível para ajustar as respostas de cada partido, caso os partidos entrem em contacto.")
+    st.caption("O teste inclui os partidos que tiveram mais do que 7000 votos nas eleições legislativas de 2024 (mínimo de assinaturas para a formação de um partido político em Portugal). ")   
+    st.caption("As afirmações que compõem o teste visam avaliar a posição relativamente a valores políticos abstractos e intemporais, não a questões especificas da realidade portuguesa em 2025. As afirmações cobrem 3 eixos:")
+    st.caption("")
+    st.caption("**Eixo Económico**: Mede o grau de intervenção geral do Estado na Economia. Espectro Esquerda-Direita.")
+    st.caption("**Eixo Social**: Mede o grau de abertura a mudanças sociais. Espectro Conservador-Progressista.")
+    st.caption("**Eixo Político**: Mede o grau de liberalismo político a nível de política interna e externa. Espectro Autoritário/Nacionalista-Liberal/Globalista")    
+    st.caption("")
+    st.caption("As respostas dos partidos são baseadas na avaliação da equipa que elaborou o teste tendo em conta os conteúdos dos mais recententes programas, posições públicas passadas, e a ideologia de cada partido. A equipa encontra-se disponível para ajustar as respostas de cada partido, caso os partidos entrem em contacto (miguelptcosta1995+votimetro@gmail.com).")
 
 def show_question(current_idx, question_list, total_questions_in_mode):
     """Shows the current question, answer buttons, skip, and back buttons."""
@@ -484,8 +484,8 @@ def show_results():
          tooltip=['Partido', alt.Tooltip('Concordância', format='.1%')]
      ).properties(background='transparent')
     st.altair_chart(affinity_chart, use_container_width=True)
-    st.write("O gráfico acima mostra a concordância geral com base em todas as suas respostas. Quanto mais distante a resposta do utilizador da resposta de um determinado partido, menor o grau de semelhança. Um resultado de 100% indica uma concordância total com um determinado partido em todas as perguntas.")
-    st.caption("Os resultados devem ser interpretados tendo em consideração as limitações do teste. O teste dá o mesmo peso a todas as afirmações, o que normalmente não reflete as preferências dos eleitores. Assim, é útil considerar não apenas o partido com maior percentagem de semelhança, mas também os partidos com percentagens próximas, já que podem ter maior concordância em temas mais relevantes para o utilizador. ")    
+    st.write("O gráfico acima mostra a concordância geral com base em todas as suas respostas. Para cada afirmação, uma resposta mais distante do utilizador em relação à resposta de um determinado partido, diminui a semelhança com esse partido.")
+    st.caption("Nota: O teste dá o mesmo peso a todas as afirmações, o que normalmente não reflete as preferências dos eleitores. Assim, é útil considerar não apenas o partido com maior percentagem de semelhança, mas também os partidos com percentagens próximas. ")    
     st.write("---")
 
     # --- 2. Political Compass Calculation & Chart ---
